@@ -1,0 +1,86 @@
+Private Sub cbVal_Change()
+Me.cbMenu.text = "Set Properties"
+End Sub
+
+Private Sub menubtnOK_Click()
+Dim menuVal As String
+Dim propVal As String
+Dim str As String
+menuVal = Me.cbMenu.text
+propVal = Me.cbProp.text
+Select Case menuVal
+Case "Get Properties"
+str = GetDwgProp(propVal)
+Me.cbVal.text = str
+Case "Set Properties"
+SetDwgProp
+Case "Quit"
+Unload Me
+Exit Sub
+Case Else
+End Select
+End Sub
+Private Sub cbProp_Change()
+'Dim mVal As String
+Dim pVal As String
+Dim str As String
+'mVal = Me.cbMenu.Text
+pVal = Me.cbProp.text
+'Select Case mVal
+'Case "Get Properties"
+str = GetDwgProp(pVal)
+Me.cbVal.text = str
+'Case "Set Properties"
+'SetDwgProp
+'Case Else
+'End Select
+End Sub
+
+
+
+Private Sub UserForm_Activate()
+PropList
+Me.cbMenu.AddItem "Get Properties"
+Me.cbMenu.AddItem "Set Properties"
+Me.cbMenu.AddItem "Quit"
+Me.cbMenu.ListIndex = 0
+End Sub
+
+Function GetDwgProp(ByRef key As String) As String
+Dim K, V As String
+ThisDrawing.SummaryInfo.GetCustomByKey key, V
+GetDwgProp = V
+End Function
+Private Sub PropList()
+Module1.LOWE
+Dim i, K, V
+Dim key As String, value As String
+  i = 0
+  h = ThisDrawing.SummaryInfo.NumCustomInfo
+    While i < h
+ThisDrawing.SummaryInfo.GetCustomByIndex i, key, value
+Debug.Print i & " , " & key & " , " & value
+Debug.Print key
+K = key
+V = value
+dpForm.cbProp.AddItem K
+dpForm.cbVal.AddItem V
+i = i + 1
+Wend
+
+       
+End Sub
+Private Sub SetDwgProp()
+Dim K, V
+K = Me.cbProp.text
+V = Me.cbVal.text
+ThisDrawing.SummaryInfo.SetCustomByKey K, V
+End Sub
+
+
+
+Private Sub UserForm_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+Unload Me
+ThisDrawing.Regen (acAllViewports)
+Exit Sub
+End Sub
