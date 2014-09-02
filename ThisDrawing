@@ -1,0 +1,7 @@
+
+Sub ACADStartup()
+    Call AcadApplication.RunMacro(".\Sample\VBA\VBAIDEmenu\Custom_menu.dvb!CreateVBAToolBar")
+    Call AcadApplication.RunMacro(".\Sample\VBA\VBAIDEmenu\Custom_menu.dvb!VBAIDE_Customization")
+End Sub
+
+
