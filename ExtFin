@@ -1,0 +1,91 @@
+Option Explicit
+Public Type ExtMatItem
+Col As String
+Mat As String
+Sty As String
+End Type
+Public Type ExtMat
+WoodTreatment As String
+Delkote As String
+NumOfCoats As String
+Siding As ExtMatItem
+BaseBand As ExtMatItem
+Soffit As ExtMatItem
+Fascia As ExtMatItem
+CornerTrim As ExtMatItem
+WindowTrim As ExtMatItem
+Deck As ExtMatItem
+UnderSkin As ExtMatItem
+End Type
+Public NewExtFin As ExtMat
+Public ExtColMatSty
+Sub ExtFinImport()
+Dim excelApp As Excel.Application
+Dim wbkObj As Workbook
+Dim shtObj As Worksheet
+Dim i As Integer
+
+
+
+On Error Resume Next
+Set excelApp = GetObject(, "Excel.Application")
+    If Err <> 0 Then
+        Err.Clear
+        Set excelApp = CreateObject("Excel.Application")
+            If Err <> 0 Then
+                MsgBox ("There was a problem starting Excel")
+            End If
+    End If
+Excel.Application.DisplayAlerts = False
+Set wbkObj = Workbooks.Application.ActiveWorkbook
+Set shtObj = excelApp.Worksheets(1)
+ If Err <> 0 Then
+    Err.Clear
+ End If
+ 
+On Error Resume Next
+    With NewExtFin
+        .Delkote = UCase(shtObj.Range("Delkote"))
+        .NumOfCoats = UCase(shtObj.Range("NumOfCoats"))
+        .WoodTreatment = UCase(shtObj.Range("WoodTreatment"))
+        
+        .Deck.Col = UCase(shtObj.Range("DeckCol"))
+        
+        .CornerTrim.Mat = UCase(shtObj.Range("CornerTrimMat"))
+        .Deck.Mat = UCase(shtObj.Range("DeckMat"))
+        .Fascia.Mat = UCase(shtObj.Range("FasciaMat"))
+        .Siding.Mat = UCase(shtObj.Range("SidingMat"))
+        .Soffit.Mat = UCase(shtObj.Range("SoffitMat"))
+        .UnderSkin.Mat = UCase(shtObj.Range("UnderSkinMat"))
+        .WindowTrim.Mat = UCase(shtObj.Range("WindowTrimMat"))
+
+        .Soffit.Sty = UCase(shtObj.Range("SoffitStyle"))
+
+    End With
+    Load frmExtFinishes
+    With frmExtFinishes
+        .tbCoats.text = NewExtFin.NumOfCoats
+        .tbCorMat.text = NewExtFin.CornerTrim.Mat
+        .tbDecMat.text = NewExtFin.Deck.Mat
+        .tbFasMat.text = NewExtFin.Fascia.Mat
+        .tbSidMat.text = NewExtFin.Siding.Mat
+        .tbSofMat.text = NewExtFin.Soffit.Mat
+        .tbUndMat.text = NewExtFin.UnderSkin.Mat
+        .tbWinMat.text = NewExtFin.WindowTrim.Mat
+       '.tbCorSty.Text = NewExtFin.CornerTrim.Sty
+'        .tbDecSty.Text = NewExtFin.Deck.Sty
+'        .tbFasSty.Text = NewExtFin.Fascia.Sty
+'        .tbSidSty.Text = NewExtFin.Siding.Sty
+        .tbSofSty.text = NewExtFin.Soffit.Sty
+'        .tbUndSty.Text = NewExtFin.UnderSkin.Sty
+'        .tbWinSty.Text = NewExtFin.WindowTrim.Sty
+'        .tbCorCol.Text = NewExtFin.CornerTrim.Col
+        .tbDecCol.text = NewExtFin.Deck.Col
+'        .tbFasCol.Text = NewExtFin.Fascia.Col
+'        .tbSidCol.Text = NewExtFin.Siding.Col
+'        .tbSofCol.Text = NewExtFin.Soffit.Col
+'        .tbUndCol.Text = NewExtFin.UnderSkin.Col
+'        .tbWinCol.Text = NewExtFin.WindowTrim.Col
+    
+    End With
+End Sub
