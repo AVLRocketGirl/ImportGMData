@@ -1,0 +1,112 @@
+
+Option Explicit
+Dim WDProps(6, 1)
+Private Sub btnOK_Click()
+Dim tbStr As String
+tbStr = Me.cbmenu.value
+    Select Case tbStr
+        Case "ADD NEW PROPERTIES"
+            AddProps
+            Me.Hide
+            Interaction.MsgBox ("Window & Door Properties Added")
+        Case "UPDATE EXISTING PROPERTIES"
+            SetWDProps
+            Me.Hide
+            Interaction.MsgBox ("Window & Door Properties Updated")
+        Case "DONE"
+            AddProps
+            Me.Hide
+            Interaction.MsgBox ("Window & Door Properties Added")
+        Case "TBD"
+            WDTBD
+        Case "BY OTHERS"
+          ByOthers
+        Case Else
+    End Select
+End Sub
+Sub SetWDProps()
+Dim key, value, i, h, m
+    WDProps(0, 0) = "ARGON"
+    WDProps(1, 0) = "ColorMatExt"
+    WDProps(2, 0) = "ColorMatInt"
+    WDProps(3, 0) = "DHARDWARE"
+    WDProps(4, 0) = "WHARDWARE"
+    WDProps(5, 0) = "GRILLES"
+    WDProps(6, 0) = "LOW-E"
+    With Me
+    WDProps(0, 1) = .tbArgon.text
+    WDProps(1, 1) = .tbCMExt.text
+    WDProps(2, 1) = .tbCMInt.text
+    WDProps(3, 1) = .tbDHWARE.text
+    WDProps(4, 1) = .tbWHWARE.text
+    WDProps(5, 1) = .tbGrilles.text
+    WDProps(6, 1) = .tbLowe.text
+    End With
+    i = 0
+    While i < 7
+        key = WDProps(i, 0)
+        value = WDProps(i, 1)
+        ThisDrawing.SummaryInfo.SetCustomByKey key, value
+    i = i + 1
+    Wend
+End Sub
+Private Sub AddProps()
+Dim key, value, i, h, m
+        WDProps(0, 0) = "ARGON"
+        WDProps(1, 0) = "ColorMatExt"
+        WDProps(2, 0) = "ColorMatInt"
+        WDProps(3, 0) = "DHARDWARE"
+        WDProps(4, 0) = "GRILLES"
+        WDProps(5, 0) = "LOW-E"
+        WDProps(6, 0) = "WHARDWARE"
+    With Me
+        WDProps(0, 1) = .tbArgon.text
+        WDProps(1, 1) = .tbCMExt.text
+        WDProps(2, 1) = .tbCMInt.text
+        WDProps(3, 1) = .tbDHWARE.text
+        WDProps(4, 1) = .tbGrilles.text
+        WDProps(5, 1) = .tbLowe.text
+        WDProps(6, 1) = .tbWHWARE.text
+    End With
+        i = 0
+    While i < 7
+        key = WDProps(i, 0)
+        value = WDProps(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End Sub
+Private Sub ByOthers()
+With frmWinDoor
+    .tbArgon = "--"
+    .tbCMExt = "--"
+    .tbCMInt = "--"
+    .tbDHWARE = "--"
+    .tbGrilles = "--"
+    .tbLowe = "--"
+    .tbWHWARE = "--"
+    .Repaint
+End With
+End Sub
+Private Sub WDTBD()
+With frmWinDoor
+    .tbArgon = "TBD"
+    .tbCMExt = "TBD"
+    .tbCMInt = "TBD"
+    .tbDHWARE = "TBD"
+    .tbGrilles = "TBD"
+    .tbLowe = "TBD"
+    .tbWHWARE = "TBD"
+    .Repaint
+End With
+End Sub
+Private Sub UserForm_Initialize()
+With Me
+     .cbmenu.AddItem "ADD NEW PROPERTIES"
+     .cbmenu.AddItem "UPDATE EXISTING PROPERTIES"
+    ' .cbmenu.AddItem "SHOW CURRENT PROPERTIES"
+     .cbmenu.AddItem "DONE"
+     .cbmenu.AddItem "BY OTHERS"
+     .cbmenu.AddItem "TBD"
+End With
+End Sub
