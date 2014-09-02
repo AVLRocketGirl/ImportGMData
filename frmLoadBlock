@@ -1,0 +1,167 @@
+Option Explicit
+Dim LoadBlockProp(13, 1)
+Private Sub ClearLB()
+'clears all fields and radiobuttons
+With frmLoadBlock
+.lblDecks.Caption = ""
+.tbCtyReg.text = ""
+.tbDDLT.text = ""
+.tbDLLT.text = ""
+.tbFDLB.text = ""
+.tbFDLT.text = ""
+.tbFLLT.text = ""
+.tbRDLB.text = ""
+.tbRDLT.text = ""
+.tbRLLT.text = ""
+.tbStCtry.text = ""
+.tbWindSp.text = ""
+.rdDLNA.value = False
+.rdFLNA.value = False
+End With
+End Sub
+Sub AddLoadBlockProps()
+Dim key, value, i, h, m
+    LoadBlockProp(0, 0) = "BldgDept"
+    LoadBlockProp(1, 0) = "State"
+    LoadBlockProp(2, 0) = "GroundSnowLoad"
+    LoadBlockProp(3, 0) = "WindSpeed"
+    LoadBlockProp(4, 0) = "WindExpCat"
+    LoadBlockProp(5, 0) = "RoofLL"
+    LoadBlockProp(6, 0) = "RoofDLT"
+    LoadBlockProp(7, 0) = "RoofDLB"
+    LoadBlockProp(8, 0) = "FloorLLT"
+    LoadBlockProp(9, 0) = "FloorDLT"
+    LoadBlockProp(10, 0) = "FloorDLB"
+    LoadBlockProp(11, 0) = "DeckLL"
+    LoadBlockProp(12, 0) = "DeckDL"
+    'LoadBlockProp(13, 0) = "Decks"
+    
+    LoadBlockProp(0, 1) = frmLoadBlock.tbCtyReg.text
+    LoadBlockProp(1, 1) = frmLoadBlock.tbStCtry.text
+    LoadBlockProp(2, 1) = frmLoadBlock.tbGroundSnowLoad.text
+    LoadBlockProp(3, 1) = frmLoadBlock.tbWindSp.text
+    LoadBlockProp(4, 1) = frmLoadBlock.tbWindExpCat.text
+    LoadBlockProp(5, 1) = frmLoadBlock.tbRLLT.text
+    LoadBlockProp(6, 1) = frmLoadBlock.tbRDLT.text
+    LoadBlockProp(7, 1) = frmLoadBlock.tbRDLB.text
+    LoadBlockProp(8, 1) = frmLoadBlock.tbFLLT.text
+    LoadBlockProp(9, 1) = frmLoadBlock.tbFDLT.text
+    LoadBlockProp(10, 1) = frmLoadBlock.tbFDLB.text
+    LoadBlockProp(11, 1) = frmLoadBlock.tbDLLT.text
+    LoadBlockProp(12, 1) = frmLoadBlock.tbDDLT.text
+    'LoadBlockProp(13, 1) = frmLoadBlock.lblDecks.Caption
+h = ThisDrawing.SummaryInfo.NumCustomInfo
+If h > 10 Then
+SetLoadBlockProps
+Else
+    i = 0
+    While i < 13
+        key = LoadBlockProp(i, 0)
+        value = LoadBlockProp(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End If
+End Sub
+Sub SetLoadBlockProps()
+Dim key, value, i, h, m
+
+    LoadBlockProp(0, 0) = "BldgDept"
+    LoadBlockProp(1, 0) = "State"
+    LoadBlockProp(2, 0) = "GroundSnowLoad"
+    LoadBlockProp(3, 0) = "WindSpeed"
+    LoadBlockProp(4, 0) = "WindExpCat"
+    LoadBlockProp(5, 0) = "RoofLL"
+    LoadBlockProp(6, 0) = "RoofDLT"
+    LoadBlockProp(7, 0) = "RoofDLB"
+    LoadBlockProp(8, 0) = "FloorLLT"
+    LoadBlockProp(9, 0) = "FloorDLT"
+    LoadBlockProp(10, 0) = "FloorDLB"
+    LoadBlockProp(11, 0) = "DeckLL"
+    LoadBlockProp(12, 0) = "DeckDL"
+   ' LoadBlockProp(13, 0) = "Decks"
+    
+    LoadBlockProp(0, 1) = frmLoadBlock.tbCtyReg.text
+    LoadBlockProp(1, 1) = frmLoadBlock.tbStCtry.text
+    LoadBlockProp(2, 1) = frmLoadBlock.tbGroundSnowLoad.text
+    LoadBlockProp(3, 1) = frmLoadBlock.tbWindSp.text
+    LoadBlockProp(4, 1) = frmLoadBlock.tbWindExpCat.text
+    LoadBlockProp(5, 1) = frmLoadBlock.tbRLLT.text
+    LoadBlockProp(6, 1) = frmLoadBlock.tbRDLT.text
+    LoadBlockProp(7, 1) = frmLoadBlock.tbRDLB.text
+    LoadBlockProp(8, 1) = frmLoadBlock.tbFLLT.text
+    LoadBlockProp(9, 1) = frmLoadBlock.tbFDLT.text
+    LoadBlockProp(10, 1) = frmLoadBlock.tbFDLB.text
+    LoadBlockProp(11, 1) = frmLoadBlock.tbDLLT.text
+    LoadBlockProp(12, 1) = frmLoadBlock.tbDDLT.text
+   ' LoadBlockProp(13, 1) = frmLoadBlock.lblDecks.Caption
+
+    i = 0
+    While i < 13
+        key = LoadBlockProp(i, 0)
+        value = LoadBlockProp(i, 1)
+        ThisDrawing.SummaryInfo.SetCustomByKey key, value
+    i = i + 1
+    Wend
+End Sub
+Private Sub btnSetProperties_Click()
+Dim tbStr As String
+tbStr = Me.cbMenu.value
+Select Case tbStr
+    Case "ADD NEW PROPERTIES"
+            AddLoadBlockProps
+            Me.Hide
+            frmWinDoor.Show
+        Case "UPDATE EXISTING PROPERTIES"
+            SetLoadBlockProps
+            Me.Hide
+            frmWinDoor.Show
+        Case "SHOW CURRENT PROPERTIES"
+             DrawingProperties.ExistingData
+             ' GetTitleBlockProps
+        Case "RE-IMPORT GOLDMINE PROPERTIES"
+             DrawingProperties.DbImport
+             Me.Repaint
+         Case "NEXT"
+            Me.Hide
+            frmWinDoor.Show
+         Case Else
+End Select
+End Sub
+Private Sub UserForm_Initialize()
+    With Me
+        .cbMenu.AddItem "ADD NEW PROPERTIES"
+        .cbMenu.AddItem "UPDATE EXISTING PROPERTIES"
+        .cbMenu.AddItem "SHOW CURRENT PROPERTIES"
+        .cbMenu.AddItem "RE-IMPORT GOLDMINE PROPERTIES"
+        .cbMenu.AddItem "NEXT"
+    End With
+End Sub
+Private Sub Label23_Click()
+Dim GSL As String
+GSL = Me.tbRLLT.value
+Me.tbGroundSnowLoad.value = GSL
+Me.tbWindExpCat.value = "C"
+Me.Repaint
+End Sub
+
+Private Sub rdDLNA_Click()
+    Me.tbDDLT = "N/A"
+    Me.tbDLLT = "N/A"
+    Me.Repaint
+End Sub
+
+Private Sub rdFLNA_Click()
+If frmLoadBlock.rdFLNA = True Then
+    frmLoadBlock.tbFLLT = "N/A"
+    frmLoadBlock.tbFDLT = "N/A"
+    frmLoadBlock.tbFDLB = "N/A"
+    Me.Repaint
+End If
+End Sub
+
+Private Sub UserForm_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+ClearLB
+End Sub
+
+
