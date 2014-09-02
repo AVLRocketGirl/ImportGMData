@@ -1,0 +1,924 @@
+Option Explicit
+Public Type TBlock
+    lastName As String
+    customerName As String
+    jobNumber As String
+    drawingNumber As String
+    projectDescription As String
+    projectManager As String
+    revNumber As String
+    newSketchDate As String
+    pageDescription As String
+    pageNumber As String
+    totalPages As String
+End Type
+Public Type StrSpecs
+    model As String
+    foundation As String
+    roofOverhang As String
+    strReq As String
+    EngReq As String
+    floorSystem As String
+    columnHeight As String
+    wallHeight As String
+    wallPanelThickness As String
+    wallOptions As String
+    sillPlateMat As String
+    skirtLength As String
+    foam As String
+    orderOfCoverage As String
+    ventStyle As String
+End Type
+Public Type Loads
+    bldgDept As String
+    state As String
+    groundSnowLoad As String
+    windSpeed As String
+    windExpCat As String
+    roofLL As String
+    roofDLT As String
+    roofDLB As String
+    floorLLT As String
+    floorDLT As String
+    floorDLB As String
+    deckLL As String
+    deckDL As String
+    'decks As String
+End Type
+Public Type WD
+    ARGON As String
+    COLMATINT As String
+    COLMATEXT As String
+    LOWE As String
+    GRILLES As String
+    WHARDWARE As String
+    DHARDWARE As String
+End Type
+
+Public NewTBlock As TBlock
+Public TitleBlock(9, 1)
+Public ExTBlock As TBlock
+Public NewSpecs As StrSpecs
+Public StrSpecBlock(15, 1)
+Public ExtSpecs As StrSpecs
+Public NewWingSpecs As StrSpecs
+Public WingStrSpecBlock(15, 1)
+Public NewConnSpecs As StrSpecs
+Public ConnStrSpecBlock(15, 1)
+Public NewGarageSpecs As StrSpecs
+Public GarageStrSpecBlock(15, 1)
+Public NewLoads As Loads
+Public loadblock(12, 1)
+Public ExtLoads As Loads
+Public NewWD As WD
+Public WDBlock(7, 1)
+Public ExtWD As WD
+
+Sub removeProp()
+Dim h
+ThisDrawing.SummaryInfo.RemoveCustomByKey "CustomerName"
+h = ThisDrawing.SummaryInfo.NumCustomInfo
+
+End Sub
+Sub DeleteProps()
+On Error Resume Next
+Dim h
+Dim i As Integer
+i = CInt(ThisDrawing.SummaryInfo.NumCustomInfo)
+While i > 0
+
+ThisDrawing.SummaryInfo.RemoveCustomByIndex (i - 1)
+i = i - 1
+h = ThisDrawing.SummaryInfo.NumCustomInfo
+Debug.Print h
+Wend
+End Sub
+Sub DbImport()
+Dim excelApp As Excel.Application
+'Dim xlApp As Excel.Application
+Dim wbkObj As Excel.Workbook
+Dim shtObj As Excel.Worksheet
+'Dim wbkObj As Workbook
+'Dim shtObj As Worksheet
+Dim i As Integer
+
+On Error Resume Next
+Set excelApp = GetObject(, "Excel.Application")
+    If Err <> 0 Then
+        Err.Clear
+        Set excelApp = CreateObject("Excel.Application")
+            If Err <> 0 Then
+                MsgBox ("There was a problem starting Excel")
+            End If
+    End If
+Excel.Application.DisplayAlerts = True
+Set wbkObj = Workbooks.Application.ActiveWorkbook
+Set shtObj = excelApp.Worksheets("DELTEC1")
+ If Err <> 0 Then
+    Err.Clear
+ End If
+ 
+On Error GoTo ErrHand
+    NewTBlock.lastName = UCase(shtObj.Range("LastName"))
+    NewTBlock.customerName = UCase(shtObj.Range("CustomerName"))
+    NewTBlock.jobNumber = UCase(shtObj.Range("JobNumber"))
+    NewTBlock.drawingNumber = UCase(shtObj.Range("DrawingNumber"))
+    NewTBlock.projectDescription = UCase(shtObj.Range("ProjectDescription"))
+    NewTBlock.projectManager = UCase(shtObj.Range("ProjectManager"))
+    NewTBlock.revNumber = UCase(shtObj.Range("RevNumber"))
+    NewTBlock.newSketchDate = UCase(shtObj.Range("NewSketchDate"))
+    NewTBlock.pageDescription = "MAIN LEVEL FLOOR PLAN"
+    NewTBlock.pageNumber = "3"
+    NewTBlock.totalPages = "4"
+    
+    NewLoads.bldgDept = UCase(shtObj.Range("BldgDept"))
+    NewLoads.state = UCase(shtObj.Range("State"))
+    NewLoads.groundSnowLoad = UCase(shtObj.Range("GroundSnowLoad"))
+    NewLoads.windSpeed = UCase(shtObj.Range("WindSpeed"))
+    NewLoads.windExpCat = UCase(shtObj.Range("WindExpCat"))
+    NewLoads.roofLL = UCase(shtObj.Range("RoofLL"))
+    NewLoads.roofDLT = UCase(shtObj.Range("RoofDLT"))
+    NewLoads.roofDLB = UCase(shtObj.Range("RoofDLB"))
+    NewLoads.floorLLT = UCase(shtObj.Range("FloorLLT"))
+    NewLoads.floorDLT = UCase(shtObj.Range("FloorDLT"))
+    NewLoads.floorDLB = UCase(shtObj.Range("FloorDLB"))
+    NewLoads.deckLL = UCase(shtObj.Range("DeckLL"))
+    NewLoads.deckDL = UCase(shtObj.Range("DeckDL"))
+    'ewLoads.decks = UCase(shtObj.Range("Decks"))
+
+    NewSpecs.model = UCase(shtObj.Range("model"))
+    NewSpecs.foundation = UCase(shtObj.Range("Foundation"))
+    NewSpecs.roofOverhang = UCase(shtObj.Range("RoofOverhang"))
+    NewSpecs.strReq = UCase(shtObj.Range("StrReq"))
+    NewSpecs.EngReq = UCase(shtObj.Range("EngReq"))
+    NewSpecs.floorSystem = UCase(shtObj.Range("FloorSystem"))
+    NewSpecs.columnHeight = UCase(shtObj.Range("ColumnHeight"))
+    NewSpecs.wallHeight = UCase(shtObj.Range("WallHeight"))
+    NewSpecs.wallPanelThickness = UCase(shtObj.Range("WallPanelThickness"))
+    NewSpecs.wallOptions = UCase(shtObj.Range("WallOptions"))
+    NewSpecs.sillPlateMat = UCase(shtObj.Range("SillPlateMat"))
+    NewSpecs.skirtLength = UCase(shtObj.Range("SkirtLength"))
+    NewSpecs.foam = UCase(shtObj.Range("Foam"))
+    NewSpecs.orderOfCoverage = UCase(shtObj.Range("OrderOfCoverage"))
+    NewSpecs.ventStyle = UCase(shtObj.Range("overhangtype"))
+
+'    NewWD.ARGON = UCase(shtObj.Range("Argon"))
+'    NewWD.COLMATEXT = UCase(shtObj.Range("COLMATEXT"))
+'    NewWD.COLMATINT = UCase(shtObj.Range("COLMATINT"))
+'    NewWD.DHARDWARE = UCase(shtObj.Range("DHARDWARE"))
+'    NewWD.WHARDWARE = UCase(shtObj.Range("wHARDWARE"))
+'    NewWD.GRILLES = UCase(shtObj.Range("GRILLES"))
+'    NewWD.LOWE = UCase(shtObj.Range("LOWE"))
+
+    
+   TitleBlock(0, 0) = "CustomerName"
+   TitleBlock(1, 0) = "JobNumber"
+   TitleBlock(2, 0) = "DrawingNumber"
+   TitleBlock(3, 0) = "ProjectDescription"
+   TitleBlock(4, 0) = "ProjectManager"
+   TitleBlock(5, 0) = "RevNumber"
+   TitleBlock(6, 0) = "NewSketchDate"
+   TitleBlock(7, 0) = "PageDescription"
+   TitleBlock(8, 0) = "PageNumber"
+   TitleBlock(9, 0) = "TotalPages"
+   
+    loadblock(0, 0) = "BldgDept"
+    loadblock(1, 0) = "State"
+    loadblock(2, 0) = "GroundSnowLoad"
+    loadblock(3, 0) = "WindSpeed"
+    loadblock(4, 0) = "WindExpCat"
+    loadblock(5, 0) = "RoofLL"
+    loadblock(6, 0) = "RoofDLT"
+    loadblock(7, 0) = "RoofDLB"
+    loadblock(8, 0) = "FloorLLT"
+    loadblock(9, 0) = "FloorDLT"
+    loadblock(10, 0) = "FloorDLB"
+    loadblock(11, 0) = "DeckLL"
+    loadblock(12, 0) = "DeckDL"
+    'loadblock(13, 0) = "Decks"
+        
+    StrSpecBlock(0, 0) = "model"
+    StrSpecBlock(1, 0) = "Foundation"
+    StrSpecBlock(2, 0) = "RoofOverhang"
+    StrSpecBlock(3, 0) = "StrReq"
+    StrSpecBlock(4, 0) = "EngReq"
+    StrSpecBlock(5, 0) = "FloorSystem"
+    StrSpecBlock(6, 0) = "ColumnHeight"
+    StrSpecBlock(7, 0) = "WallHeight"
+    StrSpecBlock(8, 0) = "WallPanelThickness"
+    StrSpecBlock(9, 0) = "WallOptions"
+    StrSpecBlock(10, 0) = "SillPlateMat"
+    StrSpecBlock(11, 0) = "SkirtLength"
+    StrSpecBlock(12, 0) = "Foam"
+    StrSpecBlock(13, 0) = "OrderOfCoverage"
+    StrSpecBlock(14, 0) = "VentStyle"
+    
+    WDBlock(0, 0) = "ARGON"
+    WDBlock(1, 0) = "ColMatExt"
+    WDBlock(2, 0) = "ColMatInt"
+    WDBlock(3, 0) = "DHARDWARE"
+    WDBlock(4, 0) = "GRILLES"
+    WDBlock(5, 0) = "LOWE"
+    WDBlock(6, 0) = "WHARDWARE"
+
+  
+   TitleBlock(0, 1) = NewTBlock.customerName
+   TitleBlock(1, 1) = NewTBlock.jobNumber
+   TitleBlock(2, 1) = NewTBlock.drawingNumber
+   TitleBlock(3, 1) = NewTBlock.projectDescription
+   TitleBlock(4, 1) = NewTBlock.projectManager
+   TitleBlock(5, 1) = NewTBlock.revNumber
+   TitleBlock(6, 1) = NewTBlock.newSketchDate
+   TitleBlock(7, 1) = NewTBlock.pageDescription
+   TitleBlock(8, 1) = NewTBlock.pageNumber
+   TitleBlock(9, 1) = NewTBlock.totalPages
+   
+    loadblock(0, 1) = NewLoads.bldgDept
+    loadblock(1, 1) = NewLoads.state
+    loadblock(2, 1) = NewLoads.groundSnowLoad
+    loadblock(3, 1) = NewLoads.windSpeed
+    loadblock(4, 1) = NewLoads.windExpCat
+    loadblock(5, 1) = NewLoads.roofLL
+    loadblock(6, 1) = NewLoads.roofDLT
+    loadblock(7, 1) = NewLoads.roofDLB
+    loadblock(8, 1) = NewLoads.floorLLT
+    loadblock(9, 1) = NewLoads.floorDLT
+    loadblock(10, 1) = NewLoads.floorDLB
+    loadblock(11, 1) = NewLoads.deckLL
+    loadblock(12, 1) = NewLoads.deckDL
+    'loadblock(13, 1) = NewLoads.decks
+    
+    StrSpecBlock(0, 1) = NewSpecs.model
+    StrSpecBlock(1, 1) = NewSpecs.foundation
+    StrSpecBlock(2, 1) = NewSpecs.roofOverhang
+    StrSpecBlock(3, 1) = NewSpecs.strReq
+    StrSpecBlock(4, 1) = NewSpecs.EngReq
+    StrSpecBlock(5, 1) = NewSpecs.floorSystem
+    StrSpecBlock(6, 1) = NewSpecs.columnHeight
+    StrSpecBlock(7, 1) = NewSpecs.wallHeight
+    StrSpecBlock(8, 1) = NewSpecs.wallPanelThickness
+    StrSpecBlock(9, 1) = NewSpecs.wallOptions
+    StrSpecBlock(10, 1) = NewSpecs.sillPlateMat
+    StrSpecBlock(11, 1) = NewSpecs.skirtLength
+    StrSpecBlock(12, 1) = NewSpecs.foam
+    StrSpecBlock(13, 1) = NewSpecs.orderOfCoverage
+    StrSpecBlock(14, 1) = NewSpecs.ventStyle
+    
+'    WDBlock(0, 1) = NewWD.ARGON
+'    WDBlock(1, 1) = NewWD.COLMATEXT
+'    WDBlock(2, 1) = NewWD.COLMATINT
+'    WDBlock(3, 1) = NewWD.DHARDWARE
+'    WDBlock(4, 1) = NewWD.GRILLES
+'    WDBlock(5, 1) = NewWD.LOWE
+'    WDBlock(6, 1) = NewWD.WHARDWARE
+
+    
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+
+
+    i = 0
+        While i < 10
+            Debug.Print TitleBlock(i, 0) & ", " & TitleBlock(i, 1)
+            i = i + 1
+        Wend
+Load frmTitleBlock
+    With frmTitleBlock
+        .lblLastName.Caption = NewTBlock.lastName
+        .Caption = "GoldMine Data for this Project"
+        .tbCustomer.text = NewTBlock.customerName
+        .tbDwgNum.text = NewTBlock.drawingNumber
+        .tbJobNum.text = NewTBlock.jobNumber
+        .tbPageNum.text = NewTBlock.pageNumber
+        .tbPM.text = NewTBlock.projectManager
+        .tbRevNum.text = NewTBlock.revNumber
+        .tbSkDate.text = NewTBlock.newSketchDate
+        .tbTotalPages.text = NewTBlock.totalPages
+        .tbProjectDesc.text = NewTBlock.projectDescription
+        .ComboBox1.value = NewTBlock.pageDescription
+    End With
+Load frmLoadBlock
+    With frmLoadBlock
+        .Caption = "GoldMine Data for this Project"
+        .tbCtyReg.text = NewLoads.bldgDept
+        .tbStCtry.text = NewLoads.state
+        .tbRLLT.text = NewLoads.roofLL
+        .tbRDLT.text = NewLoads.roofDLT
+        .tbRDLB.text = NewLoads.roofDLB
+        .tbWindSp.text = NewLoads.windSpeed
+        .tbFLLT.text = NewLoads.floorLLT
+        .tbFDLT.text = NewLoads.floorDLT
+        .tbFDLB.text = NewLoads.floorDLB
+        .tbDLLT.text = NewLoads.deckLL
+        .tbDDLT.text = NewLoads.deckDL
+       ' .lblDecks.Caption = NewLoads.decks
+    End With
+
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+Exit Sub
+ErrHand:
+Dim msg
+On Error Resume Next    ' Defer error handling.
+Err.Clear
+' Check for error, then show message.
+If Err.Number <> 0 Then
+    msg = "Error # " & str(Err.Number) & " was generated by " _
+            & Err.Source & Chr(13) & Err.Description
+    MsgBox msg, , "Error", Err.HelpFile, Err.HelpContext
+End If
+
+End Sub
+Public Sub DbWingImport()
+Dim excelApp As Excel.Application
+Dim wbkObj As Workbook
+Dim shtObj As Worksheet
+Dim i As Integer
+
+On Error Resume Next
+Set excelApp = GetObject(, "Excel.Application")
+    If Err <> 0 Then
+        Err.Clear
+        Set excelApp = CreateObject("Excel.Application")
+            If Err <> 0 Then
+                MsgBox ("There was a problem starting Excel")
+            End If
+    End If
+Excel.Application.DisplayAlerts = False
+Set wbkObj = Workbooks.Application.ActiveWorkbook
+Set shtObj = excelApp.Worksheets("WING1")
+ If Err <> 0 Then
+    Err.Clear
+ End If
+ 
+On Error GoTo ErrHand
+    NewWingSpecs.model = UCase(shtObj.Range("WingSize"))
+    NewWingSpecs.foundation = UCase(shtObj.Range("WgFoundation"))
+    NewWingSpecs.roofOverhang = UCase(shtObj.Range("WgRoofOverhang"))
+    NewWingSpecs.strReq = UCase(shtObj.Range("WgStrReq"))
+    NewWingSpecs.EngReq = UCase(shtObj.Range("WgEngReq"))
+    NewWingSpecs.floorSystem = UCase(shtObj.Range("WgFloorSystem"))
+    NewWingSpecs.columnHeight = "N/A"
+    NewWingSpecs.wallHeight = UCase(shtObj.Range("WgWallHeight"))
+    NewWingSpecs.wallPanelThickness = UCase(shtObj.Range("WgWallPanelThickness"))
+    NewWingSpecs.wallOptions = UCase(shtObj.Range("WgWallOptions"))
+    NewWingSpecs.sillPlateMat = UCase(shtObj.Range("WgSillPlateMat"))
+    NewWingSpecs.skirtLength = UCase(shtObj.Range("WgSkirtLength"))
+    NewWingSpecs.foam = UCase(shtObj.Range("WgFoam"))
+    NewWingSpecs.orderOfCoverage = UCase(shtObj.Range("WgOrderOfCoverage"))
+    NewWingSpecs.ventStyle = UCase(shtObj.Range("WgOHType"))
+    
+
+With frmStructuralSpecs
+    .tbModel.text = NewWingSpecs.model
+    .tbFoundation.text = NewWingSpecs.foundation
+    .tbRoofOverhang.text = NewWingSpecs.roofOverhang
+    .tbStrReq.text = NewWingSpecs.strReq
+    ' NewWingSpecs.EngReq
+    .tbFloorSystem.text = NewWingSpecs.floorSystem
+    .tbColumnHeight.text = NewWingSpecs.columnHeight
+    .tbWallHeight.text = NewWingSpecs.wallHeight
+    .tbWallThickness.text = NewWingSpecs.wallPanelThickness
+    .tbWallOptions.text = NewWingSpecs.wallOptions
+    .tbSillPlate.text = NewWingSpecs.sillPlateMat
+    .tbSkirtLength.text = NewWingSpecs.skirtLength
+    .tbFoam.text = NewWingSpecs.foam
+    .tbOrderOfCoverage.text = NewWingSpecs.orderOfCoverage
+    .tbVents = NewWingSpecs.ventStyle
+    .Repaint
+End With
+
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+
+Exit Sub
+ErrHand:
+Dim msg
+On Error Resume Next    ' Defer error handling.
+Err.Clear
+' Check for error, then show message.
+If Err.Number <> 0 Then
+    msg = "Error # " & str(Err.Number) & " was generated by " _
+            & Err.Source & Chr(13) & Err.Description
+    MsgBox msg, , "Error", Err.HelpFile, Err.HelpContext
+End If
+Debug.Print "ERROR IMPORTING WING PROPERTIES"
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+End Sub
+Public Sub DbConnImport()
+Dim excelApp As Excel.Application
+Dim wbkObj As Workbook
+Dim shtObj As Worksheet
+Dim i As Integer
+
+On Error Resume Next
+Set excelApp = GetObject(, "Excel.Application")
+    If Err <> 0 Then
+        Err.Clear
+        Set excelApp = CreateObject("Excel.Application")
+            If Err <> 0 Then
+                MsgBox ("There was a problem starting Excel")
+            End If
+    End If
+Excel.Application.DisplayAlerts = False
+Set wbkObj = Workbooks.Application.ActiveWorkbook
+Set shtObj = excelApp.Worksheets("CONN1")
+ If Err <> 0 Then
+    Err.Clear
+ End If
+ 
+On Error GoTo ErrHand
+    NewConnSpecs.model = UCase(shtObj.Range("ConnSize"))
+    NewConnSpecs.foundation = UCase(shtObj.Range("CnFoundation"))
+    NewConnSpecs.roofOverhang = UCase(shtObj.Range("CnOH"))
+    NewConnSpecs.strReq = UCase(shtObj.Range("CnStrReq"))
+    NewConnSpecs.EngReq = UCase(shtObj.Range("CnEngHW"))
+    NewConnSpecs.floorSystem = UCase(shtObj.Range("CnFloorSystem"))
+    NewConnSpecs.columnHeight = "N/A"
+    NewConnSpecs.wallHeight = UCase(shtObj.Range("CnWH1"))
+    NewConnSpecs.wallPanelThickness = UCase(shtObj.Range("CnStudSize"))
+    NewConnSpecs.wallOptions = UCase(shtObj.Range("CnWallOptions"))
+    NewConnSpecs.sillPlateMat = UCase(shtObj.Range("CnSillPlateMat"))
+    NewConnSpecs.skirtLength = UCase(shtObj.Range("CnSkirtLength"))
+    NewConnSpecs.foam = UCase(shtObj.Range("CnFoam"))
+    NewConnSpecs.orderOfCoverage = UCase(shtObj.Range("CnOrderOfCoverage"))
+    NewConnSpecs.ventStyle = UCase(shtObj.Range("CnOHType"))
+    
+
+With frmStructuralSpecs
+    .tbModel.text = NewConnSpecs.model
+    .tbFoundation.text = NewConnSpecs.foundation
+    .tbRoofOverhang.text = NewConnSpecs.roofOverhang
+    .tbStrReq.text = NewConnSpecs.strReq
+    ' NewConnSpecs.EngReq
+    .tbFloorSystem.text = NewConnSpecs.floorSystem
+    .tbColumnHeight.text = NewConnSpecs.columnHeight
+    .tbWallHeight.text = NewConnSpecs.wallHeight
+    .tbWallThickness.text = NewConnSpecs.wallPanelThickness
+    .tbWallOptions.text = NewConnSpecs.wallOptions
+    .tbSillPlate.text = NewConnSpecs.sillPlateMat
+    .tbSkirtLength.text = NewConnSpecs.skirtLength
+    .tbFoam.text = NewConnSpecs.foam
+    .tbOrderOfCoverage.text = NewConnSpecs.orderOfCoverage
+    .tbVents = NewConnSpecs.ventStyle
+    .Repaint
+End With
+
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+
+Exit Sub
+
+ErrHand:
+Dim msg
+On Error Resume Next    ' Defer error handling.
+Err.Clear
+' Check for error, then show message.
+If Err.Number <> 0 Then
+    msg = "Error # " & str(Err.Number) & " was generated by " _
+            & Err.Source & Chr(13) & Err.Description
+    MsgBox msg, , "Error", Err.HelpFile, Err.HelpContext
+End If
+Debug.Print "ERROR IMPORTING CONNECT PROPERTIES"
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+End Sub
+Public Sub DbGARAGEImport()
+Dim excelApp As Excel.Application
+Dim wbkObj As Workbook
+Dim shtObj As Worksheet
+Dim i As Integer
+
+On Error Resume Next
+Set excelApp = GetObject(, "Excel.Application")
+    If Err <> 0 Then
+        Err.Clear
+        Set excelApp = CreateObject("Excel.Application")
+            If Err <> 0 Then
+                MsgBox ("There was a problem starting Excel")
+            End If
+    End If
+Excel.Application.DisplayAlerts = False
+Set wbkObj = Workbooks.Application.ActiveWorkbook
+Set shtObj = excelApp.Worksheets("GARAGE1")
+ If Err <> 0 Then
+    Err.Clear
+ End If
+ 
+On Error GoTo ErrHand
+    NewGarageSpecs.model = UCase(shtObj.Range("GarSize"))
+    NewGarageSpecs.foundation = UCase(shtObj.Range("GarFoundation"))
+    NewGarageSpecs.roofOverhang = UCase(shtObj.Range("GarOH"))
+    NewGarageSpecs.strReq = UCase(shtObj.Range("GarStrReq"))
+    NewGarageSpecs.EngReq = UCase(shtObj.Range("GarEngHW"))
+    NewGarageSpecs.floorSystem = UCase(shtObj.Range("GarFloorSystem"))
+    NewGarageSpecs.columnHeight = "N/A"
+    NewGarageSpecs.wallHeight = UCase(shtObj.Range("GarWH1"))
+    NewGarageSpecs.wallPanelThickness = UCase(shtObj.Range("GarStudSize"))
+    NewGarageSpecs.wallOptions = UCase(shtObj.Range("GarWallOptions"))
+    NewGarageSpecs.sillPlateMat = UCase(shtObj.Range("GarSillPlateMat"))
+    NewGarageSpecs.skirtLength = UCase(shtObj.Range("GarSkirtLength"))
+    NewGarageSpecs.foam = UCase(shtObj.Range("GarFoam"))
+    NewGarageSpecs.orderOfCoverage = UCase(shtObj.Range("GarOrderOfCoverage"))
+    NewGarageSpecs.ventStyle = UCase(shtObj.Range("GarOHType"))
+    
+
+With frmStructuralSpecs
+    .tbModel.text = NewGarageSpecs.model
+    .tbFoundation.text = NewGarageSpecs.foundation
+    .tbRoofOverhang.text = NewGarageSpecs.roofOverhang
+    .tbStrReq.text = NewGarageSpecs.strReq
+    ' NewGARAGESpecs.EngReq
+    .tbFloorSystem.text = NewGarageSpecs.floorSystem
+    .tbColumnHeight.text = NewGarageSpecs.columnHeight
+    .tbWallHeight.text = NewGarageSpecs.wallHeight
+    .tbWallThickness.text = NewGarageSpecs.wallPanelThickness
+    .tbWallOptions.text = NewGarageSpecs.wallOptions
+    .tbSillPlate.text = NewGarageSpecs.sillPlateMat
+    .tbSkirtLength.text = NewGarageSpecs.skirtLength
+    .tbFoam.text = NewGarageSpecs.foam
+    .tbOrderOfCoverage.text = NewGarageSpecs.orderOfCoverage
+    .tbVents = NewGarageSpecs.ventStyle
+    .Repaint
+End With
+
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+
+Exit Sub
+
+ErrHand:
+Dim msg
+On Error Resume Next    ' Defer error handling.
+Err.Clear
+' Check for error, then show message.
+If Err.Number <> 0 Then
+    msg = "Error # " & str(Err.Number) & " was generated by " _
+            & Err.Source & Chr(13) & Err.Description
+    MsgBox msg, , "Error", Err.HelpFile, Err.HelpContext
+End If
+Debug.Print "ERROR IMPORTING GARAGE PROPERTIES."
+Set excelApp = Nothing
+Set wbkObj = Nothing
+Set shtObj = Nothing
+End Sub
+Sub ExistingTBData()
+
+Dim h As Integer, i As Integer
+Dim key As String, value As String
+Dim teststring As String
+Debug.Print "go"
+On Error GoTo ErrHand
+   TitleBlock(0, 0) = "CustomerName"
+   TitleBlock(1, 0) = "JobNumber"
+   TitleBlock(2, 0) = "DrawingNumber"
+   TitleBlock(3, 0) = "ProjectDescription"
+   TitleBlock(4, 0) = "ProjectManager"
+   TitleBlock(5, 0) = "RevNumber"
+   TitleBlock(6, 0) = "NewSketchDate"
+   TitleBlock(7, 0) = "PageDescription"
+   TitleBlock(8, 0) = "PageNumber"
+   TitleBlock(9, 0) = "TotalPages"
+   h = ThisDrawing.SummaryInfo.NumCustomInfo
+i = 0
+If h <= 10 Then
+    Debug.Print "h = " & h
+    Exit Sub
+Else
+        While i < 10
+        key = TitleBlock(i, 0)
+        ThisDrawing.SummaryInfo.GetCustomByKey key, value
+        TitleBlock(i, 1) = value
+        Debug.Print i & TitleBlock(i, 0) & TitleBlock(i, 1)
+        i = i + 1
+        Wend
+        With ExTBlock
+            .customerName = TitleBlock(0, 1)
+            .jobNumber = TitleBlock(1, 1)
+            .drawingNumber = TitleBlock(2, 1)
+            .projectDescription = TitleBlock(3, 1)
+            .projectManager = TitleBlock(4, 1)
+            .revNumber = TitleBlock(5, 1)
+            .newSketchDate = TitleBlock(6, 1)
+            .pageDescription = TitleBlock(7, 1)
+            .pageNumber = TitleBlock(8, 1)
+            .totalPages = TitleBlock(9, 1)
+        End With
+    If h < 11 Then
+        Debug.Print "Not enough properties in drawing. Drawing contains " & h & " properties."
+    Exit Sub
+    Else
+       ' Load frmTitleBlock
+        With frmTitleBlock
+            '.Caption = "Existing Drawing Properties"
+            .tbCustomer.text = ExTBlock.customerName
+            .tbDwgNum.text = ExTBlock.drawingNumber
+            .tbJobNum.text = ExTBlock.jobNumber
+            .tbPageNum.text = ExTBlock.pageNumber
+            .tbPM.text = ExTBlock.projectManager
+            .tbRevNum.text = ExTBlock.revNumber
+            .tbSkDate.text = ExTBlock.newSketchDate
+            .tbTotalPages.text = ExTBlock.totalPages
+            .tbProjectDesc.text = ExTBlock.projectDescription
+            '.ComboBox1.value = ExTBlock.pageDescription
+        End With
+    End If
+End If
+End Sub
+Sub ExistingData()
+Dim h As Integer, i As Integer
+Dim key As String, value As String
+Dim teststring As String
+Debug.Print "go"
+On Error GoTo ErrHand
+   TitleBlock(0, 0) = "CustomerName"
+   TitleBlock(1, 0) = "JobNumber"
+   TitleBlock(2, 0) = "DrawingNumber"
+   TitleBlock(3, 0) = "ProjectDescription"
+   TitleBlock(4, 0) = "ProjectManager"
+   TitleBlock(5, 0) = "RevNumber"
+   TitleBlock(6, 0) = "NewSketchDate"
+   TitleBlock(7, 0) = "PageDescription"
+   TitleBlock(8, 0) = "PageNumber"
+   TitleBlock(9, 0) = "TotalPages"
+   
+    loadblock(0, 0) = "BldgDept"
+    loadblock(1, 0) = "State"
+    loadblock(2, 0) = "GroundSnowLoad"
+    loadblock(3, 0) = "WindSpeed"
+    loadblock(4, 0) = "WindExpCat"
+    loadblock(5, 0) = "RoofLL"
+    loadblock(6, 0) = "RoofDLT"
+    loadblock(7, 0) = "RoofDLB"
+    loadblock(8, 0) = "FloorLLT"
+    loadblock(9, 0) = "FloorDLT"
+    loadblock(10, 0) = "FloorDLB"
+    loadblock(11, 0) = "DeckLL"
+    loadblock(12, 0) = "DeckDL"
+   ' loadblock(13, 0) = "Decks"
+
+    StrSpecBlock(0, 0) = "model"
+    StrSpecBlock(1, 0) = "Foundation"
+    StrSpecBlock(2, 0) = "RoofOverhang"
+    StrSpecBlock(3, 0) = "StrReq"
+    StrSpecBlock(4, 0) = "EngReq"
+    StrSpecBlock(5, 0) = "FloorSystem"
+    StrSpecBlock(6, 0) = "ColumnHeight"
+    StrSpecBlock(7, 0) = "WallHeight"
+    StrSpecBlock(8, 0) = "WallPanelThickness"
+    StrSpecBlock(9, 0) = "WallOptions"
+    StrSpecBlock(10, 0) = "SillPlateMat"
+    StrSpecBlock(11, 0) = "SkirtLength"
+    StrSpecBlock(12, 0) = "Foam"
+    StrSpecBlock(13, 0) = "OrderOfCoverage"
+    StrSpecBlock(14, 0) = "VentStyle"
+    
+    
+    '[begin user-defined data type method]
+    
+h = ThisDrawing.SummaryInfo.NumCustomInfo
+i = 0
+If h <= 10 Then
+    Debug.Print "h = " & h
+    Exit Sub
+Else
+        While i < 10
+        key = TitleBlock(i, 0)
+        ThisDrawing.SummaryInfo.GetCustomByKey key, value
+        TitleBlock(i, 1) = value
+        Debug.Print i & TitleBlock(i, 0) & TitleBlock(i, 1)
+        i = i + 1
+        Wend
+        With ExTBlock
+            .customerName = TitleBlock(0, 1)
+            .jobNumber = TitleBlock(1, 1)
+            .drawingNumber = TitleBlock(2, 1)
+            .projectDescription = TitleBlock(3, 1)
+            .projectManager = TitleBlock(4, 1)
+            .revNumber = TitleBlock(5, 1)
+            .newSketchDate = TitleBlock(6, 1)
+            .pageDescription = TitleBlock(7, 1)
+            .pageNumber = TitleBlock(8, 1)
+            .totalPages = TitleBlock(9, 1)
+        End With
+    If h < 20 Then
+        Debug.Print "Not enough properties in drawing. Drawing contains " & h & " properties."
+    Exit Sub
+    Else
+        Load frmTitleBlock
+        With frmTitleBlock
+            .Caption = "Existing Drawing Properties"
+            .tbCustomer.text = ExTBlock.customerName
+            .tbDwgNum.text = ExTBlock.drawingNumber
+            .tbJobNum.text = ExTBlock.jobNumber
+            .tbPageNum.text = ExTBlock.pageNumber
+            .tbPM.text = ExTBlock.projectManager
+            .tbRevNum.text = ExTBlock.revNumber
+            .tbSkDate.text = ExTBlock.newSketchDate
+            .tbTotalPages.text = ExTBlock.totalPages
+            .tbProjectDesc.text = ExTBlock.projectDescription
+            .ComboBox1.value = ExTBlock.pageDescription
+        End With
+    End If
+End If
+If h < 33 Then
+   Debug.Print "Not enough properties in drawing. Drawing contains " & h & " properties."
+   Exit Sub
+   Else
+On Error GoTo ErrHand
+i = 0
+        While i < 14
+        key = loadblock(i, 0)
+        ThisDrawing.SummaryInfo.GetCustomByKey key, value
+       ' If value Is Not Null Then
+        loadblock(i, 1) = value
+       ' Else
+      '  value = "check dwg props"
+    '    End If
+        Debug.Print i & loadblock(i, 0) & loadblock(i, 1)
+        i = i + 1
+        Wend
+        With ExtLoads
+            .bldgDept = loadblock(0, 1)
+            .state = loadblock(1, 1)
+            .groundSnowLoad = loadblock(2, 1)
+            .windSpeed = loadblock(3, 1)
+            .windExpCat = loadblock(4, 1)
+            .roofLL = loadblock(5, 1)
+            .roofDLT = loadblock(6, 1)
+            .roofDLB = loadblock(7, 1)
+            .floorLLT = loadblock(8, 1)
+            .floorDLT = loadblock(9, 1)
+            .floorDLB = loadblock(10, 1)
+            .deckLL = loadblock(11, 1)
+            .deckDL = loadblock(12, 1)
+            '.decks = loadblock(13, 1)
+        End With
+        Load frmLoadBlock
+        With frmLoadBlock
+            .Caption = "Existing Drawing Properties"
+            .tbCtyReg.text = ExtLoads.bldgDept
+            .tbStCtry.text = ExtLoads.state
+            .tbRLLT.text = ExtLoads.roofLL
+            .tbRDLT.text = ExtLoads.roofDLT
+            .tbRDLB.text = ExtLoads.roofDLB
+            .tbWindSp.text = ExtLoads.windSpeed
+            .tbFLLT.text = ExtLoads.floorLLT
+            .tbFDLT.text = ExtLoads.floorDLT
+            .tbFDLB.text = ExtLoads.floorDLB
+            .tbDLLT.text = ExtLoads.deckLL
+            .tbDDLT.text = ExtLoads.deckDL
+            .tbWindExpCat = ExtLoads.windExpCat
+            .tbGroundSnowLoad = ExtLoads.groundSnowLoad
+           ' .lblDecks.Caption = ExtLoads.decks
+        End With
+  End If
+If h < 47 Then
+   Debug.Print "Not enough properties in drawing. Drawing contains " & h & " properties."
+   Exit Sub
+Else
+On Error GoTo ErrHand
+i = 0
+        While i < 15
+        key = StrSpecBlock(i, 0)
+        ThisDrawing.SummaryInfo.GetCustomByKey key, value
+   '     If value Is Not Null Then
+            StrSpecBlock(i, 1) = value
+    '    Else
+    '        value = "check dwg props"
+  '      End If
+        Debug.Print i & StrSpecBlock(i, 0) & StrSpecBlock(i, 1)
+        i = i + 1
+        Wend
+    With ExtSpecs
+            .model = StrSpecBlock(0, 1)
+            .foundation = StrSpecBlock(1, 1)
+            .roofOverhang = StrSpecBlock(2, 1)
+            .strReq = StrSpecBlock(3, 1)
+            .EngReq = StrSpecBlock(4, 1)
+            .floorSystem = StrSpecBlock(5, 1)
+            .columnHeight = StrSpecBlock(6, 1)
+            .wallHeight = StrSpecBlock(7, 1)
+            .wallPanelThickness = StrSpecBlock(8, 1)
+            .wallOptions = StrSpecBlock(9, 1)
+            .sillPlateMat = StrSpecBlock(10, 1)
+            .skirtLength = StrSpecBlock(11, 1)
+            .foam = StrSpecBlock(12, 1)
+            .orderOfCoverage = StrSpecBlock(13, 1)
+            .ventStyle = StrSpecBlock(14, 1)
+    End With
+    Load frmStructuralSpecs
+    Select Case ExtSpecs.EngReq
+        Case "YES"
+            frmStructuralSpecs.rbEngYes.value = True
+        Case "NO"
+            frmStructuralSpecs.rbEngNo.value = True
+        Case Else
+            frmStructuralSpecs.rbEngTBD.value = True
+    End Select
+    With frmStructuralSpecs
+        .tbModel.text = ExtSpecs.model
+        .tbFoundation.text = ExtSpecs.foundation
+        .tbRoofOverhang.text = ExtSpecs.roofOverhang
+        .tbStrReq.text = ExtSpecs.strReq
+        ' extspecs.EngReq
+        .tbFloorSystem.text = ExtSpecs.floorSystem
+        .tbColumnHeight.text = ExtSpecs.columnHeight
+        .tbWallHeight.text = ExtSpecs.wallHeight
+        .tbWallThickness.text = ExtSpecs.wallPanelThickness
+        .tbWallOptions.text = ExtSpecs.wallOptions
+        .tbSillPlate.text = ExtSpecs.sillPlateMat
+        .tbSkirtLength.text = ExtSpecs.skirtLength
+        .tbFoam.text = ExtSpecs.foam
+        .tbOrderOfCoverage.text = ExtSpecs.orderOfCoverage
+        .tbVents = ExtSpecs.ventStyle
+    End With
+End If
+Exit Sub
+ErrHand:
+Dim msg
+On Error Resume Next    ' Defer error handling.
+Err.Clear
+' Check for error, then show message.
+If Err.Number <> 0 Then
+    msg = "Error # " & str(Err.Number) & " was generated by " _
+            & Err.Source & Chr(13) & Err.Description
+    MsgBox msg, , "Error", Err.HelpFile, Err.HelpContext
+End If
+End Sub
+
+'
+'Public Sub WDImport()
+'Dim MYNewWD As WD
+'Dim MYWDBlock(6, 1)
+'Dim excelApp As Excel.Application
+'Dim wbkObj As Workbook
+'Dim shtObj As Worksheet
+'Dim i As Integer
+'
+'On Error Resume Next
+'Set excelApp = GetObject(, "Excel.Application")
+'    If Err <> 0 Then
+'        Err.Clear
+'        Set excelApp = CreateObject("Excel.Application")
+'            If Err <> 0 Then
+'                MsgBox ("There was a problem starting Excel")
+'            End If
+'    End If
+'Excel.Application.DisplayAlerts = False
+'Set wbkObj = Workbooks.Application.ActiveWorkbook
+'Set shtObj = excelApp.Worksheets("DELTEC1")
+' If Err <> 0 Then
+'    Err.Clear
+' End If
+'
+'On Error GoTo ErrHand
+'    MYNewWD.ARGON = UCase(shtObj.Range("Argon"))
+'    MYNewWD.COLMATEXT = UCase(shtObj.Range("COLMATEXT"))
+'    MYNewWD.COLMATINT = UCase(shtObj.Range("COLMATINT"))
+'    MYNewWD.DHARDWARE = UCase(shtObj.Range("DHARDWARE"))
+'    MYNewWD.WHARDWARE = UCase(shtObj.Range("wHARDWARE"))
+'    MYNewWD.GRILLES = UCase(shtObj.Range("GRILLES"))
+'    MYNewWD.LOWE = UCase(shtObj.Range("LOWE"))
+'
+'Set excelApp = Nothing
+'Set wbkObj = Nothing
+'Set shtObj = Nothing
+'
+'With frmWD
+'If MYNewWD.ARGON = "YES" Then
+'    .cbArgon.value = True
+'End If
+'.tbCMExt.Text = MYNewWD.COLMATEXT
+'.tbCMInt.Text = MYNewWD.COLMATINT
+'.tbDHware.Text = MYNewWD.DHARDWARE
+'.tbWHware.Text = MYNewWD.WHARDWARE
+'If MYNewWD.GRILLES = "YES" Then
+'    .cbGrilles.value = True
+'End If
+'If MYNewWD.LOWE = "YES" Then
+'    .cbLOWE.value = True
+'End If
+'MsgBox "OK"
+'End With
+'
+'ErrHand:
+'Dim Msg
+'On Error Resume Next    ' Defer error handling.
+'Err.Clear
+'' Check for error, then show message.
+'If Err.Number <> 0 Then
+'    Msg = "Error # " & Str(Err.Number) & " was generated by " _
+'            & Err.Source & Chr(13) & Err.Description
+'    MsgBox Msg, , "Error", Err.HelpFile, Err.HelpContext
+'End If
+'End Sub
+
