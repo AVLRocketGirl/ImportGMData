@@ -1,0 +1,163 @@
+Option Explicit
+Public objCurrentLayer As AcadLayer
+
+Private Sub SetLay0()
+Set objCurrentLayer = ThisDrawing.Layers("0")
+ThisDrawing.ActiveLayer = objCurrentLayer
+End Sub
+
+Sub ReleaseRev()
+Dim K As String
+Dim V As String
+Dim C As String
+Dim X As String
+Dim pVal As String
+On Error GoTo AddRev
+K = "RevNumber"
+ThisDrawing.SummaryInfo.GetCustomByKey K, pVal
+C = pVal
+If C = "PRE" Then
+    V = Interaction.InputBox("Enter New Revision Number", "Current Rev: " & C, "1")
+Else
+    V = Interaction.InputBox("Enter New Revision Number", "Current Rev: " & C, (C + 1))
+End If
+
+ThisDrawing.SummaryInfo.SetCustomByKey K, V
+ThisDrawing.Regen (acAllViewports)
+ThisDrawing.Application.ZoomAll
+SetLay0
+Exit Sub
+AddRev:
+X = Interaction.InputBox("Enter New Revision Number", "Current Rev: " & C, C)
+ThisDrawing.SummaryInfo.SetCustomByKey K, V
+ThisDrawing.Regen (acAllViewports)
+ThisDrawing.Application.ZoomAll
+SetLay0
+End Sub
+Sub DelNFCBlk()
+Dim ent As AcadEntity
+Dim ObkRef As AcadBlockReference
+For Each ent In ThisDrawing.ModelSpace
+If ent.ObjectName = "AcDbBlockReference" Then
+Set ObkRef = ent
+If ObkRef.EffectiveName = "NFC" Then
+ObkRef.Delete
+End If
+End If
+Next ent
+ThisDrawing.Application.ZoomAll
+ThisDrawing.Regen (acAllViewports)
+SetLay0
+End Sub
+
+Public Sub PlotLayouts()
+Dim objLayout As AcadLayout
+Dim strLayoutList() As String
+Dim intCount As Integer
+Dim objPlot As AcadPlot
+
+    intCount = -1
+    For Each objLayout In ThisDrawing.Layouts
+    Debug.Print objLayout.Name
+    Debug.Print objLayout.ConfigName 'CutePDFWriter
+    Debug.Print objLayout.StyleSheet 'DELTEC PLOT.ctb
+   
+'      If MsgBox("Do you wish to plot the layout: " _
+'                & objLayout.Name, vbYesNo) = vbYes Then
+'        intCount = intCount + 1
+'        ReDim Preserve strLayoutList(intCount)
+'          strLayoutList(intCount) = objLayout.Name
+'      End If
+    Next objLayout
+    
+'    Set objPlot = ThisDrawing.Plot
+'    objPlot.SetLayoutsToPlot strLayoutList
+'    objPlot.PlotToDevice
+End Sub
+Sub test1()
+Dim MyString, i, j
+Dim MyArray, Result
+MyString = InputBox("Enter Test String:")
+
+i = InStr(MyString, "-")
+j = InStr(MyString, "X")
+Debug.Print "i = " & i
+Debug.Print "j = " & j
+Select Case i
+    Case Null
+    Result = "--"
+    Case 0
+    If j > 0 Then
+    Result = MyString
+    Else
+    Result = "-1" & j
+    End If
+    Case Is > 0
+    MyArray = Split(MyString, "-", -1, 1)
+    Result = Trim(MyArray(1))
+    Case Else
+    Result = "0--"
+End Select
+
+Debug.Print "RESULT: " & Result & " " & i
+End Sub
+Sub test2()
+
+Dim i, j, MyString, MyArray, Result
+MyString = "6/0x6/0 - BY OTHERS"
+
+i = InStr(MyString, "-")
+j = InStr(MyString, "X")
+If i = Null Then
+    Result = "--"
+ElseIf i = 0 Then
+    If j > 0 Then
+    Result = MyString
+    Else
+    Result = "---"
+    End If
+ElseIf i > 0 Then
+    MyArray = Split(MyString, " - ", -1, 1)
+    Result = MyArray(0)
+Else
+    Result = "--"
+End If
+Debug.Print Result
+End Sub
+Sub test3()
+
+Dim i, j, MyString, WDNOTE, TEMPER, EGRESS, Result
+
+i = InStr(MyString, "TEMPER")
+j = InStr(MyString, "EGRESS")
+If i = Null Then
+    TEMPER = 0
+ElseIf i = 0 Then
+    TEMPER = 0
+ElseIf i > 0 Then
+    TEMPER = 1
+Else
+    TEMPER = 0
+End If
+If i = Null Then
+    EGRESS = 0
+ElseIf i = 0 Then
+    EGRESS = 0
+ElseIf i > 0 Then
+    EGRESS = 1
+Else
+    EGRESS = 0
+End If
+If TEMPER > 0 Then
+    If EGRESS > 0 Then
+        WDNOTE = "TEMPERED, EGRESS"
+    Else: WDNOTE = "TEMPERED"
+    End If
+Else
+    If EGRESS > 0 Then
+        WDNOTE = "EGRESS"
+    Else: WDNOTE = ""
+    End If
+End If
+Debug.Print WDNOTE
+End Sub
