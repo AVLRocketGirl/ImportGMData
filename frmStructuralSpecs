@@ -1,0 +1,544 @@
+
+
+Option Explicit
+Dim StrSpecBlockProp(15, 1)
+Sub AddWingProps()
+Dim WingStrSpecBlock(15, 1)
+Dim EngReq
+Dim key, value, i, h, m
+
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    
+    WingStrSpecBlock(0, 0) = "Wgmodel"
+    WingStrSpecBlock(1, 0) = "WgFoundation"
+    WingStrSpecBlock(2, 0) = "WgRoofOverhang"
+    WingStrSpecBlock(3, 0) = "WgStrReq"
+    WingStrSpecBlock(4, 0) = "WgEngReq"
+    WingStrSpecBlock(5, 0) = "WgFloorSystem"
+    WingStrSpecBlock(6, 0) = "WgColumnHeight"
+    WingStrSpecBlock(7, 0) = "WgWallHeight"
+    WingStrSpecBlock(8, 0) = "WgWallPanelThickness"
+    WingStrSpecBlock(9, 0) = "WgWallOptions"
+    WingStrSpecBlock(10, 0) = "WgSillPlateMat"
+    WingStrSpecBlock(11, 0) = "WgSkirtLength"
+    WingStrSpecBlock(12, 0) = "WgFoam"
+    WingStrSpecBlock(13, 0) = "WgOrderOfCoverage"
+    WingStrSpecBlock(14, 0) = "WgVentStyle"
+    
+    WingStrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    WingStrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    WingStrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    WingStrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    WingStrSpecBlock(4, 1) = EngReq
+    WingStrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    WingStrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    WingStrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    WingStrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    WingStrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    WingStrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    WingStrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    WingStrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    WingStrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    WingStrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = WingStrSpecBlock(i, 0)
+        value = WingStrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End Sub
+Sub AddConnProps()
+Dim ConnStrSpecBlock(15, 1)
+Dim EngReq
+Dim key, value, i, h, m
+
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    
+    ConnStrSpecBlock(0, 0) = "Cnmodel"
+    ConnStrSpecBlock(1, 0) = "CnFoundation"
+    ConnStrSpecBlock(2, 0) = "CnRoofOverhang"
+    ConnStrSpecBlock(3, 0) = "CnStrReq"
+    ConnStrSpecBlock(4, 0) = "CnEngReq"
+    ConnStrSpecBlock(5, 0) = "CnFloorSystem"
+    ConnStrSpecBlock(6, 0) = "CnColumnHeight"
+    ConnStrSpecBlock(7, 0) = "CnWallHeight"
+    ConnStrSpecBlock(8, 0) = "CnWallPanelThickness"
+    ConnStrSpecBlock(9, 0) = "CnWallOptions"
+    ConnStrSpecBlock(10, 0) = "CnSillPlateMat"
+    ConnStrSpecBlock(11, 0) = "CnSkirtLength"
+    ConnStrSpecBlock(12, 0) = "CnFoam"
+    ConnStrSpecBlock(13, 0) = "CnOrderOfCoverage"
+    ConnStrSpecBlock(14, 0) = "CnVentStyle"
+    
+    ConnStrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    ConnStrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    ConnStrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    ConnStrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    ConnStrSpecBlock(4, 1) = EngReq
+    ConnStrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    ConnStrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    ConnStrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    ConnStrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    ConnStrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    ConnStrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    ConnStrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    ConnStrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    ConnStrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    ConnStrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = ConnStrSpecBlock(i, 0)
+        value = ConnStrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End Sub
+Sub AddGarageProps()
+Dim GarageStrSpecBlock(15, 1)
+Dim EngReq
+Dim key, value, i, h, m
+
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    
+    GarageStrSpecBlock(0, 0) = "Garmodel"
+    GarageStrSpecBlock(1, 0) = "GarFoundation"
+    GarageStrSpecBlock(2, 0) = "GarRoofOverhang"
+    GarageStrSpecBlock(3, 0) = "GarStrReq"
+    GarageStrSpecBlock(4, 0) = "GarEngReq"
+    GarageStrSpecBlock(5, 0) = "GarFloorSystem"
+    GarageStrSpecBlock(6, 0) = "GarColumnHeight"
+    GarageStrSpecBlock(7, 0) = "GarWallHeight"
+    GarageStrSpecBlock(8, 0) = "GarWallPanelThickness"
+    GarageStrSpecBlock(9, 0) = "GarWallOptions"
+    GarageStrSpecBlock(10, 0) = "GarSillPlateMat"
+    GarageStrSpecBlock(11, 0) = "GarSkirtLength"
+    GarageStrSpecBlock(12, 0) = "GarFoam"
+    GarageStrSpecBlock(13, 0) = "GarOrderOfCoverage"
+    GarageStrSpecBlock(14, 0) = "GarVentStyle"
+    
+    GarageStrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    GarageStrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    GarageStrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    GarageStrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    GarageStrSpecBlock(4, 1) = EngReq
+    GarageStrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    GarageStrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    GarageStrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    GarageStrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    GarageStrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    GarageStrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    GarageStrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    GarageStrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    GarageStrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    GarageStrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = GarageStrSpecBlock(i, 0)
+        value = GarageStrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End Sub
+Sub AddStrSpecProps()
+Dim EngReq
+Dim key, value, i, h, m
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    StrSpecBlock(0, 0) = "model"
+    StrSpecBlock(1, 0) = "Foundation"
+    StrSpecBlock(2, 0) = "RoofOverhang"
+    StrSpecBlock(3, 0) = "StrReq"
+    StrSpecBlock(4, 0) = "EngReq"
+    StrSpecBlock(5, 0) = "FloorSystem"
+    StrSpecBlock(6, 0) = "ColumnHeight"
+    StrSpecBlock(7, 0) = "WallHeight"
+    StrSpecBlock(8, 0) = "WallPanelThickness"
+    StrSpecBlock(9, 0) = "WallOptions"
+    StrSpecBlock(10, 0) = "SillPlateMat"
+    StrSpecBlock(11, 0) = "SkirtLength"
+    StrSpecBlock(12, 0) = "Foam"
+    StrSpecBlock(13, 0) = "OrderOfCoverage"
+    StrSpecBlock(14, 0) = "VentStyle"
+    
+    StrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    StrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    StrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    StrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    StrSpecBlock(4, 1) = EngReq
+    StrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    StrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    StrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    StrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    StrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    StrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    StrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    StrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    StrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    StrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = StrSpecBlock(i, 0)
+        value = StrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End Sub
+'=====
+Sub SetWingProps()
+Dim WingStrSpecBlock(15, 1)
+Dim EngReq
+Dim key, value, i, h, m
+
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    
+    WingStrSpecBlock(0, 0) = "Wgmodel"
+    WingStrSpecBlock(1, 0) = "WgFoundation"
+    WingStrSpecBlock(2, 0) = "WgRoofOverhang"
+    WingStrSpecBlock(3, 0) = "WgStrReq"
+    WingStrSpecBlock(4, 0) = "WgEngReq"
+    WingStrSpecBlock(5, 0) = "WgFloorSystem"
+    WingStrSpecBlock(6, 0) = "WgColumnHeight"
+    WingStrSpecBlock(7, 0) = "WgWallHeight"
+    WingStrSpecBlock(8, 0) = "WgWallPanelThickness"
+    WingStrSpecBlock(9, 0) = "WgWallOptions"
+    WingStrSpecBlock(10, 0) = "WgSillPlateMat"
+    WingStrSpecBlock(11, 0) = "WgSkirtLength"
+    WingStrSpecBlock(12, 0) = "WgFoam"
+    WingStrSpecBlock(13, 0) = "WgOrderOfCoverage"
+    WingStrSpecBlock(14, 0) = "WgVentStyle"
+    
+    WingStrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    WingStrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    WingStrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    WingStrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    WingStrSpecBlock(4, 1) = EngReq
+    WingStrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    WingStrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    WingStrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    WingStrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    WingStrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    WingStrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    WingStrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    WingStrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    WingStrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    WingStrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = WingStrSpecBlock(i, 0)
+        value = WingStrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+    i = i + 1
+    Wend
+End Sub
+Sub SetConnProps()
+Dim ConnStrSpecBlock(15, 1)
+Dim EngReq
+Dim key, value, i, h, m
+
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    
+    ConnStrSpecBlock(0, 0) = "Cnmodel"
+    ConnStrSpecBlock(1, 0) = "CnFoundation"
+    ConnStrSpecBlock(2, 0) = "CnRoofOverhang"
+    ConnStrSpecBlock(3, 0) = "CnStrReq"
+    ConnStrSpecBlock(4, 0) = "CnEngReq"
+    ConnStrSpecBlock(5, 0) = "CnFloorSystem"
+    ConnStrSpecBlock(6, 0) = "CnColumnHeight"
+    ConnStrSpecBlock(7, 0) = "CnWallHeight"
+    ConnStrSpecBlock(8, 0) = "CnWallPanelThickness"
+    ConnStrSpecBlock(9, 0) = "CnWallOptions"
+    ConnStrSpecBlock(10, 0) = "CnSillPlateMat"
+    ConnStrSpecBlock(11, 0) = "CnSkirtLength"
+    ConnStrSpecBlock(12, 0) = "CnFoam"
+    ConnStrSpecBlock(13, 0) = "CnOrderOfCoverage"
+    ConnStrSpecBlock(14, 0) = "CnVentStyle"
+    
+    ConnStrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    ConnStrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    ConnStrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    ConnStrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    ConnStrSpecBlock(4, 1) = EngReq
+    ConnStrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    ConnStrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    ConnStrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    ConnStrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    ConnStrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    ConnStrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    ConnStrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    ConnStrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    ConnStrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    ConnStrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = ConnStrSpecBlock(i, 0)
+        value = ConnStrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.SetCustomByKey key, value
+    i = i + 1
+    Wend
+End Sub
+Sub SetGarageProps()
+Dim GarageStrSpecBlock(15, 1)
+Dim EngReq
+Dim key, value, i, h, m
+
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    
+    GarageStrSpecBlock(0, 0) = "Garmodel"
+    GarageStrSpecBlock(1, 0) = "GarFoundation"
+    GarageStrSpecBlock(2, 0) = "GarRoofOverhang"
+    GarageStrSpecBlock(3, 0) = "GarStrReq"
+    GarageStrSpecBlock(4, 0) = "GarEngReq"
+    GarageStrSpecBlock(5, 0) = "GarFloorSystem"
+    GarageStrSpecBlock(6, 0) = "GarColumnHeight"
+    GarageStrSpecBlock(7, 0) = "GarWallHeight"
+    GarageStrSpecBlock(8, 0) = "GarWallPanelThickness"
+    GarageStrSpecBlock(9, 0) = "GarWallOptions"
+    GarageStrSpecBlock(10, 0) = "GarSillPlateMat"
+    GarageStrSpecBlock(11, 0) = "GarSkirtLength"
+    GarageStrSpecBlock(12, 0) = "GarFoam"
+    GarageStrSpecBlock(13, 0) = "GarOrderOfCoverage"
+    GarageStrSpecBlock(14, 0) = "GarVentStyle"
+    
+    GarageStrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    GarageStrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    GarageStrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    GarageStrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    GarageStrSpecBlock(4, 1) = EngReq
+    GarageStrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    GarageStrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    GarageStrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    GarageStrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    GarageStrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    GarageStrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    GarageStrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    GarageStrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    GarageStrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    GarageStrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = GarageStrSpecBlock(i, 0)
+        value = GarageStrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.SetCustomByKey key, value
+    i = i + 1
+    Wend
+End Sub
+Sub SetStrSpecProps()
+Dim EngReq
+Dim key, value, i, h, m
+    If frmStructuralSpecs.rbEngNo.value = True Then
+        EngReq = "NO"
+    ElseIf frmStructuralSpecs.rbEngYes.value = True Then
+        EngReq = "YES"
+    Else
+        EngReq = "TBD"
+    End If
+    StrSpecBlock(0, 0) = "model"
+    StrSpecBlock(1, 0) = "Foundation"
+    StrSpecBlock(2, 0) = "RoofOverhang"
+    StrSpecBlock(3, 0) = "StrReq"
+    StrSpecBlock(4, 0) = "EngReq"
+    StrSpecBlock(5, 0) = "FloorSystem"
+    StrSpecBlock(6, 0) = "ColumnHeight"
+    StrSpecBlock(7, 0) = "WallHeight"
+    StrSpecBlock(8, 0) = "WallPanelThickness"
+    StrSpecBlock(9, 0) = "WallOptions"
+    StrSpecBlock(10, 0) = "SillPlateMat"
+    StrSpecBlock(11, 0) = "SkirtLength"
+    StrSpecBlock(12, 0) = "Foam"
+    StrSpecBlock(13, 0) = "OrderOfCoverage"
+    StrSpecBlock(14, 0) = "VentStyle"
+    
+    StrSpecBlock(0, 1) = frmStructuralSpecs.tbModel.text
+    StrSpecBlock(1, 1) = frmStructuralSpecs.tbFoundation.text
+    StrSpecBlock(2, 1) = frmStructuralSpecs.tbRoofOverhang.text
+    StrSpecBlock(3, 1) = frmStructuralSpecs.tbStrReq.text
+    StrSpecBlock(4, 1) = EngReq
+    StrSpecBlock(5, 1) = frmStructuralSpecs.tbFloorSystem.text
+    StrSpecBlock(6, 1) = frmStructuralSpecs.tbColumnHeight.text
+    StrSpecBlock(7, 1) = frmStructuralSpecs.tbWallHeight.text
+    StrSpecBlock(8, 1) = frmStructuralSpecs.tbWallThickness.text
+    StrSpecBlock(9, 1) = frmStructuralSpecs.tbWallOptions.text
+    StrSpecBlock(10, 1) = frmStructuralSpecs.tbSillPlate.text
+    StrSpecBlock(11, 1) = frmStructuralSpecs.tbSkirtLength.text
+    StrSpecBlock(12, 1) = frmStructuralSpecs.tbFoam.text
+    StrSpecBlock(13, 1) = frmStructuralSpecs.tbOrderOfCoverage.text
+    StrSpecBlock(14, 1) = frmStructuralSpecs.tbVents.text
+
+   i = 0
+    While i < 15
+        key = StrSpecBlock(i, 0)
+        value = StrSpecBlock(i, 1)
+        ThisDrawing.SummaryInfo.SetCustomByKey key, value
+    i = i + 1
+    Wend
+End Sub
+'=====
+Private Sub btnAdd_Click()
+Dim cbA As String
+cbA = cbStrSelect.text
+Select Case cbA
+    Case "DELTEC 1"
+        AddStrSpecProps
+    Case "CONNECT"
+        AddConnProps
+    Case "GARAGE"
+        AddGarageProps
+    Case "WING", "WING ONLY"
+        AddWingProps
+    Case Else
+        AddStrSpecProps
+End Select
+'Me.btnWriteStrSpecs.Enabled = True
+Me.Repaint
+End Sub
+
+Private Sub btnImport_Click()
+Dim cbT As String
+cbT = cbStrSelect.value
+If cbT = "WING" Or cbT = "WING ONLY" Then
+DrawingProperties.DbWingImport
+Me.Repaint
+ElseIf cbT = "CONNECT" Then
+DrawingProperties.DbConnImport
+Me.Repaint
+ElseIf cbT = "GARAGE" Then
+DrawingProperties.DbGARAGEImport
+Me.Repaint
+Else
+DrawingProperties.DbImport
+Me.Repaint
+End If
+End Sub
+
+Private Sub btnWriteStrSpecs_Click()
+
+End Sub
+
+'Private Sub btnWriteStrSpecs_Click()
+'frmStructuralSpecs.Hide
+'End Sub
+Private Sub cbStrSelect_Change()
+Dim cbStr As String
+cbStr = cbStrSelect.value
+Select Case cbStr
+Case "Deltec 1"
+    Me.btnImport.Caption = "Import Main Model"
+Case "CONNECT"
+    Me.btnImport.Caption = "Import Connect"
+    Case "WING"
+    Me.btnImport.Caption = "Import Wing"
+ Case "GARAGE"
+    Me.btnImport.Caption = "Import Garage"
+Case "WING ONLY"
+    Me.btnImport.Caption = "Import Wing"
+Case Else
+End Select
+Me.Repaint
+
+End Sub
+
+Private Sub UserForm_Initialize()
+cbStrSelect.AddItem "DELTEC 1"
+cbStrSelect.AddItem "CONNECT"
+cbStrSelect.AddItem "WING"
+cbStrSelect.AddItem "GARAGE"
+cbStrSelect.AddItem "WING ONLY"
+ With Me
+        .cbMenu.AddItem "ADD NEW PROPERTIES"
+        .cbMenu.AddItem "UPDATE EXISTING PROPERTIES"
+        .cbMenu.AddItem "SHOW CURRENT PROPERTIES"
+        .cbMenu.AddItem "RE-IMPORT GOLDMINE PROPERTIES"
+        .cbMenu.AddItem "NEXT"
+End With
+End Sub
+Private Sub btnSetProperties_Click()
+Dim tbStr As String
+tbStr = Me.cbMenu.value
+Select Case tbStr
+    Case "ADD NEW PROPERTIES"
+            AddSpecs
+            
+        Case "UPDATE EXISTING PROPERTIES"
+            'SetLoadBlockProps
+          Case "SHOW CURRENT PROPERTIES"
+             DrawingProperties.ExistingData
+             ' GetTitleBlockProps
+        Case "RE-IMPORT GOLDMINE PROPERTIES"
+         DrawingProperties.DbImport
+         Me.Repaint
+         Case "NEXT"
+            Me.Hide
+            '02/07/2012
+            frmWinDoor.Show
+            
+'            frmTitleBlock.Show
+           '**01/12/2012** 'frmExtFinishes.Show
+         Case Else
+End Select
+
+End Sub
+Sub AddSpecs()
+Dim cbA As String
+cbA = cbStrSelect.text
+Select Case cbA
+    Case "DELTEC 1"
+        AddStrSpecProps
+    Case "CONNECT"
+        AddConnProps
+    Case "GARAGE"
+        AddGarageProps
+    Case "WING", "WING ONLY"
+        AddWingProps
+    Case Else
+        AddStrSpecProps
+End Select
+End Sub
