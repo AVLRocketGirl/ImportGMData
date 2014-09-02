@@ -1,0 +1,440 @@
+
+Option Explicit
+Dim TitleBlockProp(9, 1)
+
+
+
+Private Sub btnSetProperties_Click()
+Dim tbStr As String
+tbStr = Me.cbMenu.value
+Select Case tbStr
+    Case "ADD NEW PROPERTIES"
+            AddTitleBlockProps
+            MsgBox ("Title Block Properties Added")
+        Case "UPDATE EXISTING PROPERTIES"
+            SetTitleBlockProps
+            MsgBox ("Title Block Properties Updated")
+            frmTitleBlock.Hide
+          Case "SHOW CURRENT PROPERTIES"
+             DrawingProperties.ExistingTBData
+             ' GetTitleBlockProps
+        Case "RE-IMPORT GOLDMINE PROPERTIES"
+         DrawingProperties.DbImport
+         Me.Repaint
+         Case "NEXT"
+            frmLoadBlock.Show
+        Case "SAVE"
+            SaveDrawing
+        Case "Close"
+          Unload Me
+ThisDrawing.Regen (acAllViewports)
+         Case Else
+End Select
+'AddTitleBlockProps
+
+End Sub
+
+
+
+Private Sub UserForm_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+  Dim msg, Style, Title, Response, MyString
+            msg = "Clear all text from this form?"
+            Style = vbYesNo + vbCritical + vbDefaultButton2
+            Title = "Clear Form?"
+            Response = MsgBox(msg, Style, Title)
+            If Response = vbYes Then
+            MyString = "Yes"    'Clear Text From Form
+            ClearTitleBlockForm
+            Else    ' User chose No.
+            MyString = "No"    'Continue without Saving
+            End If
+End Sub
+Sub ClearTitleBlockForm()
+    With frmTitleBlock
+        .tbCustomer.text = ""
+        .tbJobNum.text = ""
+        .tbDwgNum.text = ""
+        .tbProjectDesc.text = ""
+        .tbPM.text = ""
+        .tbRevNum.text = ""
+        .tbSkDate.text = ""
+        .ComboBox1.value = ""
+        .tbPageNum.text = ""
+        .tbTotalPages.text = ""
+    End With
+End Sub
+Function dwgFilePath() As String
+Dim strDwgName As String
+strDwgName = ThisDrawing.FullName
+dwgFilePath = strDwgName
+End Function
+Sub btnSaveAs_Click()
+SaveDrawing
+End Sub
+'Sub SaveDrawing()
+Dim strFilepath As String
+Dim strFileName As String
+strFilepath = tbFilePath.text
+Dim pgName As String, pageDescription As String
+'frmTitleBlock.Hide '
+    If Dir(strFilepath) = "" Then
+      '  MkDir (strFilepath)
+      Debug.Print " MkDir" & strFilepath
+    Else
+    End If
+   pageDescription = ComboBox1.text
+    Select Case pageDescription
+        Case "PERIMETER LAYOUT"
+            pgName = "PERIM"
+        Case "PILING LAYOUT"
+            pgName = "PILINGS"
+        Case "BASEMENT FLOOR PLAN"
+            pgName = "BSMT"
+        Case "MAIN LEVEL FLOOR PLAN"
+            pgName = "MAIN"
+        Case "UPPER LEVEL FLOOR PLAN"
+            pgName = "UPPER"
+        Case "FLOOR TRUSS LAYOUT"
+            pgName = "FLOORLO"
+        Case "ROOF TRUSS LAYOUT"
+            pgName = "ROOFLO"
+        Case "ELEVATIONS"
+            pgName = "ELEV"
+        Case "ROOF OVER DECK DETAILS"
+            pgName = "ROD"
+        Case Else
+            pgName = InputBox("Enter a name for this page", "Enter a page name ( i.e. MAIN)")
+    End Select
+hisDrawing.SaveAs strFilepath & FileName & ".DWG"
+Debug.Print "save as" & strFilepath & FileName & ".DWG"
+MsgBox (strFilepath & FileName & ".dwg SAVED")
+
+End Sub
+'Sub SaveNewDrawing()
+Sub SaveDrawing()
+Dim modelSz As String, filePath As String, FileName As String, dwgNum As String, year As String
+Dim dwgPre As String
+Dim pgName As String, pageDescription As String, last As String
+pageDescription = ComboBox1.text
+    Select Case pageDescription
+        Case "PERIMETER LAYOUT"
+            pgName = "PERIM"
+        Case "PILING LAYOUT"
+            pgName = "PILINGS"
+        Case "BASEMENT FLOOR PLAN"
+            pgName = "BSMT"
+        Case "MAIN LEVEL FLOOR PLAN"
+            pgName = "MAIN"
+        Case "UPPER LEVEL FLOOR PLAN"
+            pgName = "UPPER"
+        Case "FLOOR TRUSS LAYOUT"
+            pgName = "FLOORLO"
+        Case "ROOF TRUSS LAYOUT"
+            pgName = "ROOFLO"
+        Case "ELEVATIONS"
+            pgName = "ELEV"
+        Case "ROOF OVER DECK DETAILS"
+            pgName = "ROD"
+        Case Else
+            pgName = InputBox("Enter a name for this page", "Enter a page name ( i.e. MAIN)")
+    End Select
+last = frmTitleBlock.lblLastName.Caption
+dwgNum = frmTitleBlock.tbDwgNum.text
+dwgPre = Left(dwgNum, 4)
+year = DwgYear(dwgPre)
+modelSz = DwgModel(dwgPre)
+filePath = ("K:\" & modelSz & "\YEAR " & year & "\" & dwgNum & "_" & last & "\")
+FileName = (dwgNum & "_" & pgName)
+frmTitleBlock.Hide
+    If Dir(filePath) = "" Then
+        MkDir (filePath)
+    Else
+    End If
+ThisDrawing.SaveAs filePath & FileName & ".DWG"
+MsgBox (filePath & FileName & ".dwg SAVED")
+'frmMainMenu.LboxTextOutput1.AddItem (filePath & fileName & ".dwg SAVED")
+End Sub
+Function DwgYear(ByVal Prefix As String) As String
+Dim strPre, retVal
+strPre = Left(Prefix, 2)
+If strPre < 80 Then
+retVal = "20" & strPre
+Else
+retVal = "19" & strPre
+End If
+DwgYear = retVal
+End Function
+Function DwgModel(ByVal Prefix As String) As String
+Dim strPre, retVal
+strPre = Right(Prefix, 2)
+    Select Case strPre
+        Case "3-"
+            retVal = "300"
+        Case "5-"
+            retVal = "500"
+        Case "8-"
+            retVal = "800"
+        Case "9-"
+            retVal = "900"
+        Case "10"
+            retVal = "1000"
+        Case "12"
+            retVal = "1200"
+        Case "15"
+            retVal = "1500"
+        Case "16"
+            retVal = "1600"
+        Case "20"
+            retVal = "2000"
+        Case "25"
+            retVal = "2500"
+        Case Else
+            retVal = "X"
+    End Select
+    DwgModel = retVal
+End Function
+
+Sub AddTitleBlockProps()
+Dim key, value, i, h, m
+    TitleBlockProp(0, 0) = "CustomerName"
+    TitleBlockProp(1, 0) = "JobNumber"
+    TitleBlockProp(2, 0) = "DrawingNumber"
+    TitleBlockProp(3, 0) = "ProjectDescription"
+    TitleBlockProp(4, 0) = "ProjectManager"
+    TitleBlockProp(5, 0) = "RevNumber"
+    TitleBlockProp(6, 0) = "NewSketchDate"
+    TitleBlockProp(7, 0) = "PageDescription"
+    TitleBlockProp(8, 0) = "PageNumber"
+    TitleBlockProp(9, 0) = "TotalPages"
+    
+    TitleBlockProp(0, 1) = frmTitleBlock.tbCustomer.text
+    TitleBlockProp(1, 1) = frmTitleBlock.tbJobNum.text
+    TitleBlockProp(2, 1) = frmTitleBlock.tbDwgNum.text
+    TitleBlockProp(3, 1) = frmTitleBlock.tbProjectDesc.text
+    TitleBlockProp(4, 1) = frmTitleBlock.tbPM.text
+    TitleBlockProp(5, 1) = frmTitleBlock.tbRevNum.text
+    TitleBlockProp(6, 1) = frmTitleBlock.tbSkDate.text
+    TitleBlockProp(7, 1) = frmTitleBlock.ComboBox1.text
+    TitleBlockProp(8, 1) = frmTitleBlock.tbPageNum.text
+    TitleBlockProp(9, 1) = frmTitleBlock.tbTotalPages.text
+
+    h = ThisDrawing.SummaryInfo.NumCustomInfo
+    
+    If h > 0 Then
+             DrawingProperties.DeleteProps
+         End If
+         i = 0
+    While i < 10
+        key = TitleBlockProp(i, 0)
+        value = TitleBlockProp(i, 1)
+        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+          i = i + 1
+    Wend
+End Sub
+Sub GetTitleBlockProps()
+Dim i, h, m
+Dim key As String, value As String
+  i = 0
+    TitleBlockProp(0, 0) = "CustomerName"
+    TitleBlockProp(1, 0) = "JobNumber"
+    TitleBlockProp(2, 0) = "DrawingNumber"
+    TitleBlockProp(3, 0) = "ProjectDescription"
+    TitleBlockProp(4, 0) = "ProjectManager"
+    TitleBlockProp(5, 0) = "RevNumber"
+    TitleBlockProp(6, 0) = "NewSketchDate"
+    TitleBlockProp(7, 0) = "PageDescription"
+    TitleBlockProp(8, 0) = "PageNumber"
+    TitleBlockProp(9, 0) = "TotalPages"
+
+    h = ThisDrawing.SummaryInfo.NumCustomInfo
+    If h < 10 Then
+        MsgBox "Check Drawing Properties"
+    Exit Sub
+    Else
+         i = 0
+    While i < 10
+        key = TitleBlockProp(i, 0)
+       
+        ThisDrawing.SummaryInfo.GetCustomByKey key, value
+         TitleBlockProp(i, 1) = value
+    i = i + 1
+    Wend
+    frmTitleBlock.tbCustomer.text = TitleBlockProp(0, 1)
+    frmTitleBlock.tbJobNum.text = TitleBlockProp(1, 1)
+    frmTitleBlock.tbDwgNum.text = TitleBlockProp(2, 1)
+    frmTitleBlock.tbProjectDesc.text = TitleBlockProp(3, 1)
+    frmTitleBlock.tbPM.text = TitleBlockProp(4, 1)
+    frmTitleBlock.tbRevNum.text = TitleBlockProp(5, 1)
+    frmTitleBlock.tbSkDate.text = TitleBlockProp(6, 1)
+    frmTitleBlock.ComboBox1.text = TitleBlockProp(7, 1)
+    frmTitleBlock.tbPageNum.text = TitleBlockProp(8, 1)
+    frmTitleBlock.tbTotalPages.text = TitleBlockProp(9, 1)
+ End If
+End Sub
+Sub SetTitleBlockProps()
+Dim key, value, i, h, m
+    TitleBlockProp(0, 0) = "CustomerName"
+    TitleBlockProp(1, 0) = "JobNumber"
+    TitleBlockProp(2, 0) = "DrawingNumber"
+    TitleBlockProp(3, 0) = "ProjectDescription"
+    TitleBlockProp(4, 0) = "ProjectManager"
+    TitleBlockProp(5, 0) = "RevNumber"
+    TitleBlockProp(6, 0) = "NewSketchDate"
+    TitleBlockProp(7, 0) = "PageDescription"
+    TitleBlockProp(8, 0) = "PageNumber"
+    TitleBlockProp(9, 0) = "TotalPages"
+    
+    TitleBlockProp(0, 1) = frmTitleBlock.tbCustomer.text
+    TitleBlockProp(1, 1) = frmTitleBlock.tbJobNum.text
+    TitleBlockProp(2, 1) = frmTitleBlock.tbDwgNum.text
+    TitleBlockProp(3, 1) = frmTitleBlock.tbProjectDesc.text
+    TitleBlockProp(4, 1) = frmTitleBlock.tbPM.text
+    TitleBlockProp(5, 1) = frmTitleBlock.tbRevNum.text
+    TitleBlockProp(6, 1) = frmTitleBlock.tbSkDate.text
+    TitleBlockProp(7, 1) = frmTitleBlock.ComboBox1.text
+    TitleBlockProp(8, 1) = frmTitleBlock.tbPageNum.text
+    TitleBlockProp(9, 1) = frmTitleBlock.tbTotalPages.text
+
+    h = ThisDrawing.SummaryInfo.NumCustomInfo
+    If h < 10 Then
+        MsgBox "Check Drawing Properties"
+    Exit Sub
+    Else
+         i = 0
+    While i < 10
+        key = TitleBlockProp(i, 0)
+        value = TitleBlockProp(i, 1)
+        ThisDrawing.SummaryInfo.SetCustomByKey key, value
+    i = i + 1
+    Wend
+    End If
+End Sub
+Sub UserForm_Initialize()
+    With frmTitleBlock
+'        .tbCustomer.text = ExistingTitleBlock.CustomerName
+'        .tbDwgNum.text = ExistingTitleBlock.DrawingNumber
+'        .tbJobNum.text = ExistingTitleBlock.JobNumber
+'        .tbPageNum.text = ExistingTitleBlock.PageNumber
+'        .tbPM.text = ExistingTitleBlock.ProjectManager
+'        .tbProjectDesc.text = ExistingTitleBlock.ProjectDescription
+'        .tbRevNum.text = ExistingTitleBlock.RevNumber
+'        .tbSkDate.text = ExistingTitleBlock.NewSketchDate
+'        .tbTotalPages.text = ExistingTitleBlock.TotalPages
+        '.ComboBox1.text = ExistingTitleBlock.PageDescription 'ListIndex = 0
+        .ComboBox1.AddItem "PERIMETER LAYOUT" 'ListIndex = 1
+        .ComboBox1.AddItem "PILING LAYOUT" 'ListIndex = 2
+        .ComboBox1.AddItem "BASEMENT FLOOR PLAN" 'ListIndex = 3
+        .ComboBox1.AddItem "MAIN LEVEL FLOOR PLAN" 'ListIndex = 4
+        .ComboBox1.AddItem "UPPER LEVEL FLOOR PLAN" 'ListIndex = 5
+        .ComboBox1.AddItem "FLOOR TRUSS LAYOUT" 'ListIndex = 6
+        .ComboBox1.AddItem "ROOF TRUSS LAYOUT" 'ListIndex = 7
+        .ComboBox1.AddItem "ROOF OVER DECK DETAILS"
+        .ComboBox1.AddItem "ELEVATIONS"
+        .cbMenu.AddItem "ADD NEW PROPERTIES"
+        .cbMenu.AddItem "UPDATE EXISTING PROPERTIES"
+        .cbMenu.AddItem "SHOW CURRENT PROPERTIES"
+        .cbMenu.AddItem "RE-IMPORT GOLDMINE PROPERTIES"
+        .cbMenu.AddItem "NEXT"
+        .cbMenu.AddItem "SAVE"
+        .tbFilePath.text = dwgFilePath
+    End With
+End Sub
+                                                                                                                                                                                                                                               
+' Sub btnNewProps_Click()
+' Call DwgPropsByBlock.NewStrSpecs
+'     With Me
+'    .tbCustomer.text = TBlock.CustomerName
+'    .tbDwgNum.text = TBlock.DrawingNumber
+'    .tbJobNum.text = TBlock.JobNumber
+'    .tbPageNum.text = TBlock.PageNumber
+'    .tbPM.text = TBlock.PM
+'    .tbProjectDesc.text = TBlock.ProjectDescription
+'    .tbRevNum.text = TBlock.RevNumber
+'    .tbSkDate.text = TBlock.NewSketchDate
+'    .tbTotalPages.text = TBlock.TotalPages
+'    .ComboBox1.text = TBlock.PageDescription
+'    End With
+'    Me.Repaint
+'End Sub
+
+Sub Editblock()
+
+Dim ent As AcadEntity
+
+Dim ObkRef As IAcadBlockReference
+
+Dim oDynProp As AcadDynamicBlockReferenceProperty
+
+Dim V As Variant
+
+Dim i As Long
+Dim modelSz
+Dim newValue
+newValue = modelSz
+
+For Each ent In ThisDrawing.ModelSpace
+
+If ent.ObjectName = "AcDbBlockReference" Then
+
+Set ObkRef = ent
+
+If ObkRef.IsDynamicBlock = True Then 'Check if it is a dynamic block
+
+ 
+
+V = ObkRef.GetDynamicBlockProperties 'Get all Dynamic attributes
+
+ 
+
+'If ObkRef.EffectiveName = blockname Then
+If ObkRef.EffectiveName = "Deltec Models" Then
+ 
+
+    For i = LBound(V) To UBound(V)
+
+ 
+
+    Set oDynProp = V(i)
+
+    If Not IsArray(oDynProp.value) Then 'Not an array
+
+  '  If oDynProp.PropertyName = Parametername Then
+  If oDynProp.PropertyName = "Visibility" Then
+ 
+
+    str (oDynProp.value)
+
+ 
+
+    oDynProp.value = newValue 'Set the new value
+    ObkRef.Explode
+    ent.Delete
+  ''  oDynProp.Value = "1200" 'Set the new value
+    ' MsgBox CStr(oDynProp.Value)
+   '  ThisDrawing.SendCommand "_EXPLODE"
+     'ThisDrawing.Regen (acAllViewports)
+     'ThisDrawing.SendCommand "-layer" & vbCr & "FREEZE" & vbCr & "A-PILE" & vbCr & vbCr
+     ThisDrawing.SendCommand "zoom" & vbCr & "a" & vbCr & vbCr
+     ThisDrawing.Regen (acAllViewports)
+    End If
+
+    End If
+
+    Next
+
+'ThisDrawing.SetRoof
+ 
+
+End If
+
+End If
+
+End If
+
+Next ent
+
+
+
+ ThisDrawing.Regen (acAllViewports)
+
+End Sub
