@@ -1,0 +1,91 @@
+
+'Option Explicit
+'
+'Private Sub btnSetProperties_Click()
+'    With NewExtFin
+'        .Delkote = UCase(shtObj.Range("Delkote"))
+'        .NumOfCoats = UCase(shtObj.Range("NumOfCoats"))
+'        .WoodTreatment = UCase(shtObj.Range("WoodTreatment"))
+'
+'        .Deck.Col = UCase(shtObj.Range("DeckCol"))
+'
+'        .CornerTrim.Mat = UCase(shtObj.Range("CornerTrimMat"))
+'        .Deck.Mat = UCase(shtObj.Range("DeckMat"))
+'        .Fascia.Mat = UCase(shtObj.Range("FasciaMat"))
+'        .Siding.Mat = UCase(shtObj.Range("SidingMat"))
+'        .Soffit.Mat = UCase(shtObj.Range("SoffitMat"))
+'        .UnderSkin.Mat = UCase(shtObj.Range("UnderSkinMat"))
+'        .WindowTrim.Mat = UCase(shtObj.Range("WindowTrimMat"))
+'
+'        .Soffit.Sty = UCase(shtObj.Range("SoffitStyle"))
+'
+'    End With
+'    Load frmExtFinishes
+'    With frmExtFinishes
+'        .tbCoats.Text = NewExtFin.NumOfCoats
+'        .tbCorMat.Text = NewExtFin.CornerTrim.Mat
+'        .tbDecMat.Text = NewExtFin.Deck.Mat
+'        .tbFasMat.Text = NewExtFin.Fascia.Mat
+'        .tbSidMat.Text = NewExtFin.Siding.Mat
+'        .tbSofMat.Text = NewExtFin.Soffit.Mat
+'        .tbUndMat.Text = NewExtFin.UnderSkin.Mat
+'        .tbWinMat.Text = NewExtFin.WindowTrim.Mat
+'       '.tbCorSty.Text = NewExtFin.CornerTrim.Sty
+''        .tbDecSty.Text = NewExtFin.Deck.Sty
+''        .tbFasSty.Text = NewExtFin.Fascia.Sty
+''        .tbSidSty.Text = NewExtFin.Siding.Sty
+'        .tbSofSty.Text = NewExtFin.Soffit.Sty
+''        .tbUndSty.Text = NewExtFin.UnderSkin.Sty
+''        .tbWinSty.Text = NewExtFin.WindowTrim.Sty
+''        .tbCorCol.Text = NewExtFin.CornerTrim.Col
+'        .tbDecCol.Text = NewExtFin.Deck.Col
+''        .tbFasCol.Text = NewExtFin.Fascia.Col
+''        .tbSidCol.Text = NewExtFin.Siding.Col
+''        .tbSofCol.Text = NewExtFin.Soffit.Col
+''        .tbUndCol.Text = NewExtFin.UnderSkin.Col
+''        .tbWinCol.Text = NewExtFin.WindowTrim.Col
+'
+'    End With
+'    Private Sub AddProps()
+'Dim key, value, i, h, m
+'    WDProps(0, 0) = "ARGON"
+'    WDProps(1, 0) = "ColMatExt"
+'    WDProps(2, 0) = "ColMatInt"
+'    WDProps(3, 0) = "DHARDWARE"
+'    WDProps(4, 0) = "GRILLES"
+'    WDProps(5, 0) = "LOWE"
+'    WDProps(6, 0) = "WHARDWARE"
+'
+'        With Me
+'    WDProps(0, 1) = .tbArgon.Text
+'    WDProps(1, 1) = .tbCMExt.Text
+'    WDProps(2, 1) = .tbCMInt.Text
+'    WDProps(3, 1) = .tbDHWARE.Text
+'    WDProps(4, 1) = .tbWHWARE.Text
+'    WDProps(5, 1) = .tbGrilles.Text
+'    WDProps(6, 1) = .tbLowe.Text
+'    End With
+'
+'        i = 0
+'    While i < 7
+'        key = WDProps(i, 0)
+'        value = WDProps(i, 1)
+'        ThisDrawing.SummaryInfo.AddCustomInfo key, value
+'    i = i + 1
+'    Wend
+'End Sub
+'
+'Private Sub cbColorTBD_Click()
+'With Me
+'.tbCorCol.Text = "TBD"
+'End With
+'End Sub
+'
+'Private Sub cbMenu_Change()
+'
+'End Sub
+'
+'Private Sub UserForm_Initialize()
+'ExtFin.ExtFinImport
+'End Sub
+
