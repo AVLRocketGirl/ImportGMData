@@ -1,0 +1,182 @@
+Option Explicit
+
+Public Sub SetDeltecTextStyle()
+Dim objTextStyle As AcadTextStyle
+    Set objTextStyle = ThisDrawing.TextStyles.Add("ROMAND")
+    objTextStyle.SetFont "Century Gothic", True, False, 0, 0
+    objTextStyle.Width = 1
+    Set objTextStyle = ThisDrawing.TextStyles.Add("ROMANC")
+    objTextStyle.SetFont "Century Gothic", True, False, 0, 0
+    objTextStyle.Width = 1
+    Set objTextStyle = ThisDrawing.TextStyles.Add("RomanS")
+    objTextStyle.SetFont "Century Gothic", False, False, 0, 0
+    objTextStyle.Width = 1
+    ThisDrawing.ActiveTextStyle = objTextStyle
+    ThisDrawing.Regen (acAllViewports)
+End Sub
+
+Public Sub SetDeltecArchFonts()
+Dim objTextStyle As AcadTextStyle
+Dim strTextStyleName As String
+Dim strTextStyles As String
+Dim strTypeFace As String
+Dim blnBold As Boolean
+Dim blnItalic As Boolean
+Dim lngCharacterSet As Long
+Dim lngPitchandFamily As Long
+Dim strText As String
+    
+   For Each objTextStyle In ThisDrawing.TextStyles
+      strTextStyles = strTextStyles & vbCr & objTextStyle.Name
+    Next
+On Error Resume Next
+'RomanS;ae2.shx
+'romb;ROMAB___.TTF
+'RomanC;arctitle.shx
+'RomanD;archtitl.shx
+        strTextStyleName = "ROMAND"
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+        objTextStyle.fontFile = "deltec-archtitl.shx"
+        objTextStyle.Width = 0.88
+        objTextStyle.Height = 0
+        strTextStyleName = "ROMANC"
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+        objTextStyle.fontFile = "deltec-arctitle.shx"
+        objTextStyle.Width = 0.9
+        objTextStyle.Height = 0
+        strTextStyleName = "ROMANS"
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+        objTextStyle.fontFile = "deltec-ae2.shx"
+        objTextStyle.Width = 0.8875
+        objTextStyle.Height = 0
+        
+    ' Check for existence the text style
+    If objTextStyle Is Nothing Then
+        MsgBox "This text style does not exist"
+        Exit Sub
+    End If
+    ThisDrawing.Regen (acAllViewports)
+    Exit Sub
+End Sub
+
+Public Sub SetRomanFonts()
+Dim objTextStyle As AcadTextStyle
+Dim strTextStyleName As String
+Dim strTextStyles As String
+Dim strTypeFace As String
+Dim blnBold As Boolean
+Dim blnItalic As Boolean
+Dim lngCharacterSet As Long
+Dim lngPitchandFamily As Long
+Dim strText As String
+    
+   For Each objTextStyle In ThisDrawing.TextStyles
+      strTextStyles = strTextStyles & vbCr & objTextStyle.Name
+    Next
+On Error Resume Next
+'RomanS;ae2.shx
+'romb;ROMAB___.TTF
+'RomanC;arctitle.shx
+'RomanD;archtitl.shx
+        strTextStyleName = "ROMAND"
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+        objTextStyle.fontFile = "romand.shx"
+        objTextStyle.Width = 0.9
+        objTextStyle.Height = 0
+        strTextStyleName = "ROMANC"
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+        objTextStyle.fontFile = "romanc.shx"
+        objTextStyle.Width = 0.9
+        objTextStyle.Height = 0
+        strTextStyleName = "ROMANS"
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+        objTextStyle.fontFile = "romans.shx"
+        objTextStyle.Width = 0.9
+        objTextStyle.Height = 0
+        
+    ' Check for existence the text style
+    If objTextStyle Is Nothing Then
+        MsgBox "This text style does not exist"
+        Exit Sub
+    End If
+    ThisDrawing.Regen (acAllViewports)
+    Exit Sub
+End Sub
+Public Sub ChangeTextStyle()
+Dim strTextStyles As String
+Dim objTextStyle As AcadTextStyle
+Dim objLayer As AcadLayer
+Dim strLayerName As String
+Dim strStyleName As String
+Dim objAcadObject As AcadObject
+    
+On Error Resume Next
+    For Each objTextStyle In ThisDrawing.TextStyles
+        strTextStyles = strTextStyles & vbCr & objTextStyle.Name
+    Next
+    strStyleName = InputBox("Enter name of style to apply:" & vbCr & _
+              strTextStyles, "TextStyles", ThisDrawing.ActiveTextStyle.Name)
+    Set objTextStyle = ThisDrawing.TextStyles(strStyleName)
+    If objTextStyle Is Nothing Then
+        MsgBox "Style does not exist"
+        Exit Sub
+    End If
+
+    For Each objAcadObject In ThisDrawing.ModelSpace
+        If objAcadObject.ObjectName = "AcDbMText" Or _
+            objAcadObject.ObjectName = "AcDbText" Then
+            objAcadObject.StyleName = strStyleName
+            objAcadObject.Update
+        End If
+    Next
+End Sub
+
+Public Sub SetDefaultTextStyle()
+Dim strTextStyles As String
+Dim objTextStyle As AcadTextStyle
+Dim strTextStyleName As String
+
+    For Each objTextStyle In ThisDrawing.TextStyles
+        strTextStyles = strTextStyles & vbCr & objTextStyle.Name
+    Next
+    strTextStyleName = InputBox("Enter name of style to apply:" & vbCr & _
+              strTextStyles, "TextStyles", ThisDrawing.ActiveTextStyle.Name)
+    If strTextStyleName = "" Then Exit Sub
+
+On Error Resume Next
+    Set objTextStyle = ThisDrawing.TextStyles(strTextStyleName)
+    If objTextStyle Is Nothing Then
+        MsgBox "This text style does not exist"
+        Exit Sub
+    End If
+    ThisDrawing.ActiveTextStyle = objTextStyle
+End Sub
+
+Public Sub ChangeDeltecTextStyle()
+Dim strTextStyles As String
+Dim objTextStyle As AcadTextStyle
+Dim objLayer As AcadLayer
+Dim strLayerName As String
+Dim strStyleName As String
+Dim objAcadObject As AcadObject
+On Error Resume Next
+    For Each objTextStyle In ThisDrawing.TextStyles
+        strTextStyles = strTextStyles & vbCr & objTextStyle.Name
+    Next
+ strStyleName = ""
+    Set objTextStyle = ThisDrawing.TextStyles(strStyleName)
+    If objTextStyle Is Nothing Then
+        MsgBox "Style does not exist"
+        Exit Sub
+    End If
+
+    For Each objAcadObject In ThisDrawing.ModelSpace
+        If objAcadObject.ObjectName = "AcDbMText" Or _
+            objAcadObject.ObjectName = "AcDbText" Then
+            objAcadObject.StyleName = strStyleName
+            objAcadObject.Update
+        End If
+    Next
+End Sub
+
+
